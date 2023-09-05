@@ -78,28 +78,28 @@ export class BoardComponent {
     }
   }
 
-
   checkForWin(row: number, column: number): boolean {
     const currentPlayer = this.board[row][column];
   
-    // Check row
-    if (this.checkConsecutive(row, column, 0, 1, currentPlayer) >= 5) {
-      return true;
-    }
+    // Define directions to check for consecutive moves
+    const directions = [
+      [0, 1],   // Right
+      [1, 0],   // Down
+      [1, 1],   // Diagonal (bottom-right)
+      [-1, 1],  // Diagonal (top-right)
+    ];
   
-    // Check column
-    if (this.checkConsecutive(row, column, 1, 0, currentPlayer) >= 5) {
-      return true;
-    }
+    for (const direction of directions) {
+      const [rowDir, colDir] = direction;
   
-    // Check diagonal from top-left to bottom-right
-    if (this.checkConsecutive(row, column, 1, 1, currentPlayer) >= 5) {
-      return true;
-    }
+      // Check in both directions (forward and backward)
+      const consecutiveCount =
+        this.checkConsecutive(row, column, rowDir, colDir, currentPlayer) +
+        this.checkConsecutive(row, column, -rowDir, -colDir, currentPlayer) + 1;
   
-    // Check diagonal from top-right to bottom-left
-    if (this.checkConsecutive(row, column, 1, -1, currentPlayer) >= 5) {
-      return true;
+      if (consecutiveCount >= 5) {
+        return true;
+      }
     }
   
     return false;
@@ -128,16 +128,76 @@ export class BoardComponent {
         this.board[newRow][newCol] === player
       ) {
         consecutiveCount++;
+        if (consecutiveCount >= 5) {
+          return consecutiveCount;
+        }
       } else {
-        break; // Stop counting if consecutive sequence is broken
+        consecutiveCount = 0; // Reset count if consecutive sequence is broken
       }
     }
   
     return consecutiveCount;
   }
   
+  // checkForWin(row: number, column: number): boolean {
+  //   const currentPlayer = this.board[row][column];
+  
+  //   // Check row
+  //   if (this.checkConsecutive(row, column, 0, 1, currentPlayer) >= 5) {
+  //     return true;
+  //   }
+  
+  //   // Check column
+  //   if (this.checkConsecutive(row, column, 1, 0, currentPlayer) >= 5) {
+  //     return true;
+  //   }
+  
+  //   // Check diagonal from top-left to bottom-right
+  //   if (this.checkConsecutive(row, column, 1, 1, currentPlayer) >= 5) {
+  //     return true;
+  //   }
+  
+  //   // Check diagonal from top-right to bottom-left
+  //   if (this.checkConsecutive(row, column, 1, -1, currentPlayer) >= 5) {
+  //     return true;
+  //   }
+  
+  //   return false;
+  // }
+  
+  // checkConsecutive(
+  //   row: number,
+  //   column: number,
+  //   rowDirection: number,
+  //   colDirection: number,
+  //   player: string
+  // ): number {
+  //   let consecutiveCount = 0;
+  //   const boardSize = this.boardSize;
+  
+  //   // Check in both directions (forward and backward)
+  //   for (let i = -4; i <= 4; i++) {
+  //     const newRow = row + i * rowDirection;
+  //     const newCol = column + i * colDirection;
+  
+  //     if (
+  //       newRow >= 0 &&
+  //       newRow < boardSize &&
+  //       newCol >= 0 &&
+  //       newCol < boardSize &&
+  //       this.board[newRow][newCol] === player
+  //     ) {
+  //       consecutiveCount++;
+  //     } else {
+  //       break; // Stop counting if consecutive sequence is broken
+  //     }
+  //   }
+  
+  //   return consecutiveCount;
+  // }
+  
 
-  invalidMove() {
-    alert('Invalid move!');
-  }
+  // invalidMove() {
+  //   alert('Invalid move!');
+  // }
 }
