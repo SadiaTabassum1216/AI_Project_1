@@ -1,4 +1,7 @@
-<div class="game-board">
+<div class="game-container">
+  <h1>Gomoku</h1>
+  <div class="game-board">
+   
     <div *ngFor="let row of board; let rowIndex = index" class="row">
       <div
         *ngFor="let cell of row; let columnIndex = index"
@@ -6,8 +9,12 @@
         [ngClass]="{ 'x-cell': cell === 'X', 'o-cell': cell === 'O' }"
         (click)="makeMove(rowIndex, columnIndex)"
       >
-        {{ cell }}
+        <img *ngIf="cell === 'X'" src="assets/white-pawn.png" alt="White Pawn" />
+        <img *ngIf="cell === 'O'" src="assets/black-pawn.png" alt="Black Pawn" />
       </div>
     </div>
   </div>
-  
+
+ 
+  <button class="new-game-button" (click)="newGame()">New Game</button>
+</div>
