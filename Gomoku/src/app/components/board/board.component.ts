@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MinimaxService } from 'src/app/services/minimax.service';
-
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
@@ -29,9 +28,14 @@ export class BoardComponent {
       this.board[row][column] = this.currentPlayer;
       if (this.checkForWin(row, column)) {
         // alert(`${this.currentPlayer} wins!`);
+      //   alert( 'Human wins!');
+      //   this.initializeBoard();
+      // }
+      setTimeout(() => {
         alert( 'Human wins!');
         this.initializeBoard();
-      } else {
+      }, 200); // Display the alert after 2 seconds
+    } else {
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
         // Computer's move (Player O)
@@ -62,8 +66,12 @@ export class BoardComponent {
 
     // Check if Player O wins
     if (this.checkForWin(row, column)) {
-      alert('Computer wins!');
-      this.initializeBoard();
+      // alert('Computer wins!');
+      // this.initializeBoard();
+      setTimeout(() => {
+         alert('Computer wins!');
+        this.initializeBoard();
+      }, 200); // Display the alert after 2 seconds
     } else {
       // Switch back to Player X's turn
       this.currentPlayer = 'X';
