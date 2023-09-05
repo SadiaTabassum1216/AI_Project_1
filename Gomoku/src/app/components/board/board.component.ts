@@ -35,19 +35,37 @@ export class BoardComponent {
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
         // Computer's move (Player O)
-        
-        // const computerMove = this.minimaxService.calculateComputerMove(this.board);
-        // if (computerMove) {
-        //   const [computerRow, computerColumn] = computerMove;
-        //   this.makeMove(computerRow, computerColumn);
-        // }
-
         if (this.currentPlayer === 'O') {
           this.makeComputerMove();
         }
       }
     }
   }
+
+  // makeMove(row: number, column: number): void {
+  //   if (this.board[row][column] === '') {
+  //     this.board[row][column] = this.currentPlayer;
+
+  //     // Check for a win for the current player
+  //     if (this.checkForWin(row, column)) {
+  //       alert(this.currentPlayer + ' wins!');
+  //       this.initializeBoard();
+  //     } else {
+  //       // Switch to the other player's turn
+  //       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+
+  //       // Check if it's the computer's turn (Player O)
+  //       if (this.currentPlayer === 'O') {
+  //         // Call the minimax service to calculate the computer's move
+  //         const computerMove = this.minimaxService.calculateComputerMove(this.board);
+  //         if (computerMove) {
+  //           const [computerRow, computerColumn] = computerMove;
+  //           this.makeMove(computerRow, computerColumn);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   makeComputerMove(): void {
     // Generate a random move for Player O
