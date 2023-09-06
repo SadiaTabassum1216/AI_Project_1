@@ -82,7 +82,6 @@ export class MinimaxService {
     // The game is still ongoing
     return null;
   }
-  
   // Helper function to check if the board is full
   isBoardFull(board: string[][]): boolean {
     for (let row = 0; row < board.length; row++) {
@@ -94,6 +93,6 @@ export class MinimaxService {
     }
     return true;
   }
-  
+
   
 }
