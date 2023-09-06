@@ -8,39 +8,103 @@ export class EvaluationService {
   constructor() { }
 
   // Evaluate the board
+  // evaluate(board: string[][]): number {
+  //   // Define the score values for different game states
+  //   const winScore = 10000;
+  //   const loseScore = -10000;
+  //   const tieScore = 0;
+  //   const blockingScore = 100;
+
+  //   // Check for a winning state for 'O'
+  //   if (this.checkWinningState(board, 'O')) {
+  //     return winScore;
+  //   }
+
+  //   // Check for a winning state for 'X'
+  //   if (this.checkWinningState(board, 'X')) {
+  //     return loseScore;
+  //   }
+    
+  //   const boardString = board.map(row => row.join('')).join('');
+    
+  //   // Blocking patterns for horizontal and vertical
+  //   const blockingPatterns = ['XXXX_', 'XXX_X', 'XX_XX', 'X_XXX'];
+  //   for (const pattern of blockingPatterns) {
+  //     if (boardString.includes(pattern)) {
+  //       return blockingScore;
+  //     }
+  //   }
+    
+  //   // Blocking patterns for diagonal (top-left to bottom-right)
+  //   const diagonalBlockingPatterns = ['_XXXX', 'X_XXX', 'XX_XX', 'XXX_X', 'XXXX_'];
+  //   for (const pattern of diagonalBlockingPatterns) {
+  //     if (boardString.includes(pattern)) {
+  //       return blockingScore;
+  //     }
+  //   }
+    
+  //   // Blocking patterns for diagonal (top-right to bottom-left)
+  //   const reverseDiagonalBlockingPatterns = ['XXXX_', 'XXX_X', 'XX_XX', 'X_XXX', '_XXXX'];
+  //   for (const pattern of reverseDiagonalBlockingPatterns) {
+  //     if (boardString.includes(pattern)) {
+  //       return blockingScore;
+  //     }
+  //   }
+    
+  //   const opponentWinningPatterns = ['OOOO_', 'OOO_O', 'OO_OO', 'O_OOO'];
+  //   for (const pattern of opponentWinningPatterns) {
+  //     if (boardString.includes(pattern)) {
+  //       return -blockingScore;
+  //     }
+  //   }
+    
+  //   // If neither 'O' nor 'X' has won, return a tie score
+  //   return tieScore;
+  // }
   evaluate(board: string[][]): number {
     // Define the score values for different game states
     const winScore = 10000;
     const loseScore = -10000;
     const tieScore = 0;
     const blockingScore = 100;
-
+  
     // Check for a winning state for 'O'
     if (this.checkWinningState(board, 'O')) {
       return winScore;
     }
-
+  
     // Check for a winning state for 'X'
     if (this.checkWinningState(board, 'X')) {
       return loseScore;
     }
-    
+  
     const boardString = board.map(row => row.join('')).join('');
-    const blockingPatterns = ['XXXX_', 'XXX_X', 'XX_XX', 'X_XXX', 'XXXXX', 'X_XXX', 'XX_XX', 'XXX_X', '_XXXX', 'X___X'];
+ 
+    const blockingPatterns = [
+      'XXXX_', 'XXX_X', 'XX_XX', 'XXXOX', 'XOXXX', 'XXXXO', // Horizontal
+      'X_XXX', 'XX_XX', 'XXX_X', 'XXXOX', 'XOXXX', 'XXXXO', // Vertical
+      '_XXXX', 'X_XXX', 'XX_XX', 'XXX_X', 'XXXOX', 'XXXXO', // Diagonal (top-left to bottom-right)
+      'XXXX_', 'XXX_X', 'XX_XX', 'X_XXX', '_XXXX', 'XXXXO', // Diagonal (top-right to bottom-left)
+      'XXXX_', 'XXX_X', 'XX_XX', 'X_XXX', '_XXXX', 'XXXXO', // Diagonal (bottom-left to top-right)
+      '_XXXX', 'X_XXX', 'XX_XX', 'XXX_X', 'XXXOX', 'XXXXO'  // Diagonal (bottom-right to top-left)
+    ];
     for (const pattern of blockingPatterns) {
       if (boardString.includes(pattern)) {
         return blockingScore;
       }
     }
+  
     const opponentWinningPatterns = ['OOOO_', 'OOO_O', 'OO_OO', 'O_OOO'];
     for (const pattern of opponentWinningPatterns) {
       if (boardString.includes(pattern)) {
         return -blockingScore;
       }
     }
+  
     // If neither 'O' nor 'X' has won, return a tie score
     return tieScore;
   }
+  
 
    // Define the dimensions of the game board
    boardSize = 10;
@@ -108,6 +172,7 @@ export class EvaluationService {
      }
      return false;
    }
+ 
  
    // Helper function to check if a specific pattern is present on the board
    checkPattern(board: string[][], pattern: number[][], player: string): boolean {
