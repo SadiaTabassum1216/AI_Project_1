@@ -27,31 +27,10 @@ export class BoardComponent {
   }
 
 
-  // makeMove(row: number, column: number): void {
-  //   if (this.board[row][column] === '') {
-  //     this.board[row][column] = this.currentPlayer;
-  //     if (this.checkForWin(row, column)) {
-  //       // alert(`${this.currentPlayer} wins!`);
-  //       setTimeout(() => {
-  //         alert('Human wins!');
-  //         this.initializeBoard();
-  //       }, 200); // Display the alert after 2 seconds
-  //     } else {
-  //       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
-
-  //       // Computer's move (Player O)
-  //       if (this.currentPlayer === 'O') {
-  //         this.makeComputerMove();
-  //       }
-  //     }
-  //   }
-  // }
-
   makeMove(row: number, column: number): void {
     if (this.board[row][column] === '') {
       this.board[row][column] = this.currentPlayer;
 
-      // Check for a win for Human
       if (this.checkForWin(row, column)) {
         setTimeout(() => {
           if (this.currentPlayer === 'X') {
@@ -62,7 +41,7 @@ export class BoardComponent {
            this.initializeBoard();
            }, 200);
       } else {
-        // Switch to Computer's turn
+        // Switch turn
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
         if (this.currentPlayer === 'O') {
@@ -76,26 +55,7 @@ export class BoardComponent {
     }
   }
 
-  // Not being used now. It is used for random moves.
-  makeComputerMove(): void {
-    let row, column;
-    do {
-      row = Math.floor(Math.random() * this.boardSize);
-      column = Math.floor(Math.random() * this.boardSize);
-    } while (this.board[row][column] !== '');
-
-    this.board[row][column] = 'O';
-
-    // Check if Computer wins
-    if (this.checkForWin(row, column)) {
-      setTimeout(() => {
-        alert('Computer wins!');
-        this.initializeBoard();
-      }, 200);
-    } else {
-      this.currentPlayer = 'X';
-    }
-  }
+ 
 
   checkForWin(row: number, column: number): boolean {
     const currentPlayer = this.board[row][column];
@@ -187,10 +147,49 @@ export class BoardComponent {
   //   return false;
   // }
 
+
+
+   // Not being used now. It is used for random moves.
+
+   
+  // makeMove(row: number, column: number): void {
+  //   if (this.board[row][column] === '') {
+  //     this.board[row][column] = this.currentPlayer;
+  //     if (this.checkForWin(row, column)) {
+  //       // alert(`${this.currentPlayer} wins!`);
+  //       setTimeout(() => {
+  //         alert('Human wins!');
+  //         this.initializeBoard();
+  //       }, 200); // Display the alert after 2 seconds
+  //     } else {
+  //       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+
+  //       // Computer's move (Player O)
+  //       if (this.currentPlayer === 'O') {
+  //         this.makeComputerMove();
+  //       }
+  //     }
+  //   }
+  // }
+
   
+  //  makeComputerMove(): void {
+  //   let row, column;
+  //   do {
+  //     row = Math.floor(Math.random() * this.boardSize);
+  //     column = Math.floor(Math.random() * this.boardSize);
+  //   } while (this.board[row][column] !== '');
 
+  //   this.board[row][column] = 'O';
 
-  // invalidMove() {
-  //   alert('Invalid move!');
+  //   // Check if Computer wins
+  //   if (this.checkForWin(row, column)) {
+  //     setTimeout(() => {
+  //       alert('Computer wins!');
+  //       this.initializeBoard();
+  //     }, 200);
+  //   } else {
+  //     this.currentPlayer = 'X';
+  //   }
   // }
 }
