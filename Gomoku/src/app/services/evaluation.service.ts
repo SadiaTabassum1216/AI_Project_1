@@ -1,5 +1,3 @@
-
-
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -15,6 +13,7 @@ export class EvaluationService {
     const winScore = 10000;
     const loseScore = -10000;
     const tieScore = 0;
+    const blockingScore = 100;
 
     // Check for a winning state for 'O'
     if (this.checkWinningState(board, 'O')) {
@@ -25,7 +24,20 @@ export class EvaluationService {
     if (this.checkWinningState(board, 'X')) {
       return loseScore;
     }
-
+    
+    const boardString = board.map(row => row.join('')).join('');
+    const blockingPatterns = ['XXXX_', 'XXX_X', 'XX_XX', 'X_XXX', 'XXXXX', 'X_XXX', 'XX_XX', 'XXX_X', '_XXXX', 'X___X'];
+    for (const pattern of blockingPatterns) {
+      if (boardString.includes(pattern)) {
+        return blockingScore;
+      }
+    }
+    const opponentWinningPatterns = ['OOOO_', 'OOO_O', 'OO_OO', 'O_OOO'];
+    for (const pattern of opponentWinningPatterns) {
+      if (boardString.includes(pattern)) {
+        return -blockingScore;
+      }
+    }
     // If neither 'O' nor 'X' has won, return a tie score
     return tieScore;
   }
@@ -45,7 +57,6 @@ export class EvaluationService {
            pattern.push([row, col + i]);
          }
          patterns.push(pattern);
-         console.log(patterns);
        }
      }
  
@@ -57,7 +68,6 @@ export class EvaluationService {
            pattern.push([row + i, col]);
          }
          patterns.push(pattern);
-        
        }
      }
  
@@ -69,7 +79,6 @@ export class EvaluationService {
            pattern.push([row + i, col + i]);
          }
          patterns.push(pattern);
-         
        }
      }
  
@@ -81,7 +90,6 @@ export class EvaluationService {
            pattern.push([row + i, col - i]);
          }
          patterns.push(pattern);
-        
        }
      }
  
