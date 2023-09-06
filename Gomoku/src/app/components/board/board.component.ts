@@ -38,7 +38,7 @@ export class BoardComponent {
           } else {
             alert('Computer wins!');
           }
-           this.initializeBoard();
+           this.newGame();
            }, 200);
       } else {
         // Switch turn
@@ -172,7 +172,7 @@ export class BoardComponent {
   //   }
   // }
 
-  
+
   //  makeComputerMove(): void {
   //   let row, column;
   //   do {
