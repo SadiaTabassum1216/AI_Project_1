@@ -4,10 +4,84 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class EvaluationService {
+  currentPlayer: string= 'O';
 
   constructor() { }
+  // Evaluate the board
+
+// evaluate(board: string[][]): number {
+//   const player = 'O'; // The player for which to calculate the score
+//   const scoringPatterns: any = {
+//     '11110': 1000,  // Five in a row with one empty end
+//     '011110': 500, // Four in a row with one empty end
+//     '01110': 50,   // Four in a row with no empty end
+//     '001110': 25,  // Three in a row with one empty end
+//     '011100': 25,  // Three in a row with one empty end
+//     '0001110': 5,  // Two in a row with one empty end
+//     '011000': 5,   // Two in a row with one empty end
+//     '001100': 2,   // Two in a row with no empty end
+//     '000110': 2    // Two in a row with no empty end
+//   };
+
+//   let score = 0;
+
+//   // Helper function to calculate score for a pattern
+//   const calculatePatternScore = (pattern: string): any => {
+//     for (const key in scoringPatterns) {
+//       if (pattern.includes(key)) {
+//         score += scoringPatterns[key];
+//       }
+//     }
+//   };
+
+//   const boardSize = 10;
+
+//   // Check horizontal patterns
+//   for (let row = 0; row < boardSize; row++) {
+//     for (let col = 0; col <= boardSize - 5; col++) {
+//       const pattern = board[row].slice(col, col + 5).join('');
+//       if (pattern.includes(player)) {
+//         calculatePatternScore(pattern);
+//       }
+//     }
+//   }
+
+//   // Check vertical patterns
+//   for (let col = 0; col < boardSize; col++) {
+//     for (let row = 0; row <= boardSize - 5; row++) {
+//       const pattern = Array.from({ length: 5 }, (_, i) => board[row + i][col]).join('');
+//       if (pattern.includes(player)) {
+//         calculatePatternScore(pattern);
+//       }
+//     }
+//   }
+
+//   // Check diagonal patterns (top-left to bottom-right)
+//   for (let row = 0; row <= boardSize - 5; row++) {
+//     for (let col = 0; col <= boardSize - 5; col++) {
+//       const pattern = Array.from({ length: 5 }, (_, i) => board[row + i][col + i]).join('');
+//       if (pattern.includes(player)) {
+//         calculatePatternScore(pattern);
+//       }
+//     }
+//   }
+
+//   // Check diagonal patterns (top-right to bottom-left)
+//   for (let row = 0; row <= boardSize - 5; row++) {
+//     for (let col = boardSize - 1; col >= 4; col--) {
+//       const pattern = Array.from({ length: 5 }, (_, i) => board[row + i][col - i]).join('');
+//       if (pattern.includes(player)) {
+//         calculatePatternScore(pattern);
+//       }
+//     }
+//   }
+
+//   return score;
+// }
+
 
   // Evaluate the board
+  
   evaluate(board: string[][]): number {
     // Define the score values for different game states
     const winScore = 10000;
@@ -28,93 +102,36 @@ export class EvaluationService {
     return tieScore;
   }
 
-// Define scoring patterns and their corresponding scores
-//  scoringPatterns: { [pattern: string]: number } = {
-//   '11110': 1000,  // Five Xs in a row with one empty end
-//   '011110': 500, // Four Xs in a row with one empty end
-//   '01110': 50,   // Four Xs in a row with no empty end
-//   '001110': 25,  // Three Xs in a row with one empty end
-//   '011100': 25,  // Three Xs in a row with one empty end
-//   '0001110': 5,  // Two Xs in a row with one empty end
-//   '011000': 5,   // Two Xs in a row with one empty end
-//   '001100': 2,   // Two Xs in a row with no empty end
-//   '000110': 2,   // Two Xs in a row with no empty end
-// };
+  // evaluate(board: string[][]): number {
+  //   const scoringPatterns: { [pattern: string]: number } = {
+  //     '11110': 1000,  // Five Xs in a row with one empty end
+  //     '011110': 500, // Four Xs in a row with one empty end
+  //     '01110': 50,   // Four Xs in a row with no empty end
+  //     '001110': 25,  // Three Xs in a row with one empty end
+  //     '011100': 25,  // Three Xs in a row with one empty end
+  //     '0001110': 5,  // Two Xs in a row with one empty end
+  //     '011000': 5,   // Two Xs in a row with one empty end
+  //     '001100': 2,   // Two Xs in a row with no empty end
+  //     '000110': 2,   // Two Xs in a row with no empty end
+  //   };
+  
+  //   let score = 0;
 
-//  evaluate(board: string[][]): number {
-//   let score = 0;
-//   const player= 'O';
-
-//   // Define the dimensions of the game board
-//   const boardSize = board.length;
-
-//   // Check horizontal patterns
-//   for (let row = 0; row < boardSize; row++) {
-//     for (let col = 0; col <= boardSize - 5; col++) {
-//       const pattern = board[row].slice(col, col + 5).join('');
-//       if (pattern.includes(player)) {
-//         for (const key in this.scoringPatterns) {
-//           if (pattern.includes(key)) {
-//             score += this.scoringPatterns[key];
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   // Check vertical patterns
-//   for (let col = 0; col < boardSize; col++) {
-//     for (let row = 0; row <= boardSize - 5; row++) {
-//       const pattern = [];
-//       for (let i = 0; i < 5; i++) {
-//         pattern.push(board[row + i][col]);
-//       }
-//       if (pattern.includes(player)) {
-//         for (const key in this.scoringPatterns) {
-//           if (pattern.join('').includes(key)) {
-//             score += this.scoringPatterns[key];
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   // Check diagonal patterns (top-left to bottom-right)
-//   for (let row = 0; row <= boardSize - 5; row++) {
-//     for (let col = 0; col <= boardSize - 5; col++) {
-//       const pattern = [];
-//       for (let i = 0; i < 5; i++) {
-//         pattern.push(board[row + i][col + i]);
-//       }
-//       if (pattern.includes(player)) {
-//         for (const key in this.scoringPatterns) {
-//           if (pattern.join('').includes(key)) {
-//             score += this.scoringPatterns[key];
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   // Check diagonal patterns (top-right to bottom-left)
-//   for (let row = 0; row <= boardSize - 5; row++) {
-//     for (let col = boardSize - 1; col >= 4; col--) {
-//       const pattern = [];
-//       for (let i = 0; i < 5; i++) {
-//         pattern.push(board[row + i][col - i]);
-//       }
-//       if (pattern.includes(player)) {
-//         for (const key in this.scoringPatterns) {
-//           if (pattern.join('').includes(key)) {
-//             score += this.scoringPatterns[key];
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   return score;
-// }
+  
+  //   // Convert the board into a string representation for pattern matching
+  //   const boardString = board.map(row => row.join('')).join('');
+  
+  //   for (const pattern in scoringPatterns) {
+  //     const regex = new RegExp(pattern.replace(/0/g, '\\d').replace(/1/g, this.currentPlayer === 'X' ? 'X' : 'O'), 'g');
+  //     const matches = boardString.match(regex);
+  //     if (matches) {
+  //       score += matches.length * scoringPatterns[pattern];
+  //     }
+  //   }
+  
+  //   return score;
+  // }
+  
 
  boardSize = 10;
 
