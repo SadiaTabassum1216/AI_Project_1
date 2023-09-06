@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { EvaluationService } from 'src/app/services/evaluation.service';
 import { MinimaxService } from 'src/app/services/minimax.service';
 @Component({
   selector: 'app-board',
@@ -12,7 +13,7 @@ export class BoardComponent {
 
   //X means human. O means computer.
 
-  constructor(private minimaxService: MinimaxService) {
+  constructor(private minimaxService: MinimaxService, private evaluation: EvaluationService) {
     this.initializeBoard();
   }
 
@@ -31,7 +32,7 @@ export class BoardComponent {
     if (this.board[row][column] === '') {
       this.board[row][column] = this.currentPlayer;
 
-      if (this.checkForWin(row, column)) {
+      if (this.evaluation.checkWinningState(this.board, this.currentPlayer)) {
         setTimeout(() => {
           if (this.currentPlayer === 'X') {
             alert('Human wins!');
@@ -55,141 +56,4 @@ export class BoardComponent {
     }
   }
 
- 
-
-  checkForWin(row: number, column: number): boolean {
-    const currentPlayer = this.board[row][column];
-
-    // Define directions to check for consecutive moves
-    const directions = [
-      [0, 1],   // Right
-      [1, 0],   // Down
-      [1, 1],   // Diagonal (bottom-right)
-      [-1, 1],  // Diagonal (top-right)
-    ];
-
-    for (const direction of directions) {
-      const [rowDir, colDir] = direction;
-
-      // Check in both directions (forward and backward)
-      const consecutiveCount =
-        this.checkConsecutive(row, column, rowDir, colDir, currentPlayer) +
-        this.checkConsecutive(row, column, -rowDir, -colDir, currentPlayer) + 1;
-
-      if (consecutiveCount >= 5) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  checkConsecutive(
-    row: number,
-    column: number,
-    rowDirection: number,
-    colDirection: number,
-    player: string
-  ): number {
-    let consecutiveCount = 0;
-    const boardSize = this.boardSize;
-
-    // Check in both directions (forward and backward)
-    for (let i = -4; i <= 4; i++) {
-      const newRow = row + i * rowDirection;
-      const newCol = column + i * colDirection;
-
-      if (
-        newRow >= 0 &&
-        newRow < boardSize &&
-        newCol >= 0 &&
-        newCol < boardSize &&
-        this.board[newRow][newCol] === player
-      ) {
-        consecutiveCount++;
-        if (consecutiveCount >= 5) {
-          return consecutiveCount;
-        }
-      } 
-      else {
-        consecutiveCount = 0; //Reset
-        break;
-      }
-    }
-
-    return consecutiveCount;
-  }
-
-  
-  // checkForWin(row: number, column: number): boolean {
-  //   const currentPlayer = this.board[row][column];
-
-  //   // Check row
-  //   if (this.checkConsecutive(row, column, 0, 1, currentPlayer) >= 5) {
-  //     return true;
-  //   }
-
-  //   // Check column
-  //   if (this.checkConsecutive(row, column, 1, 0, currentPlayer) >= 5) {
-  //     return true;
-  //   }
-
-  //   // Check diagonal from top-left to bottom-right
-  //   if (this.checkConsecutive(row, column, 1, 1, currentPlayer) >= 5) {
-  //     return true;
-  //   }
-
-  //   // Check diagonal from top-right to bottom-left
-  //   if (this.checkConsecutive(row, column, 1, -1, currentPlayer) >= 5) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
-
-
-
-   // Not being used now. It is used for random moves.
-
-   
-  // makeMove(row: number, column: number): void {
-  //   if (this.board[row][column] === '') {
-  //     this.board[row][column] = this.currentPlayer;
-  //     if (this.checkForWin(row, column)) {
-  //       // alert(`${this.currentPlayer} wins!`);
-  //       setTimeout(() => {
-  //         alert('Human wins!');
-  //         this.initializeBoard();
-  //       }, 200); // Display the alert after 2 seconds
-  //     } else {
-  //       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
-
-  //       // Computer's move (Player O)
-  //       if (this.currentPlayer === 'O') {
-  //         this.makeComputerMove();
-  //       }
-  //     }
-  //   }
-  // }
-
-
-  //  makeComputerMove(): void {
-  //   let row, column;
-  //   do {
-  //     row = Math.floor(Math.random() * this.boardSize);
-  //     column = Math.floor(Math.random() * this.boardSize);
-  //   } while (this.board[row][column] !== '');
-
-  //   this.board[row][column] = 'O';
-
-  //   // Check if Computer wins
-  //   if (this.checkForWin(row, column)) {
-  //     setTimeout(() => {
-  //       alert('Computer wins!');
-  //       this.initializeBoard();
-  //     }, 200);
-  //   } else {
-  //     this.currentPlayer = 'X';
-  //   }
-  // }
 }
