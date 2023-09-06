@@ -10,6 +10,8 @@ export class BoardComponent {
   board: string[][] = [];
   currentPlayer: string = 'X';
 
+  //X means human. O means computer.
+
   constructor(private minimaxService: MinimaxService) {
     this.initializeBoard();
   }
@@ -24,7 +26,7 @@ export class BoardComponent {
     }
   }
 
-  
+
   // makeMove(row: number, column: number): void {
   //   if (this.board[row][column] === '') {
   //     this.board[row][column] = this.currentPlayer;
@@ -49,19 +51,21 @@ export class BoardComponent {
     if (this.board[row][column] === '') {
       this.board[row][column] = this.currentPlayer;
 
-      // Check for a win for the current player
+      // Check for a win for Human
       if (this.checkForWin(row, column)) {
-         setTimeout(() => {
-           alert( 'Human wins!');
+        setTimeout(() => {
+          if (this.currentPlayer === 'X') {
+            alert('Human wins!');
+          } else {
+            alert('Computer wins!');
+          }
            this.initializeBoard();
            }, 200);
       } else {
-        // Switch to the other player's turn
+        // Switch to Computer's turn
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
-        // Check if it's the computer's turn (Player O)
         if (this.currentPlayer === 'O') {
-          // Call the minimax service to calculate the computer's move
           const computerMove = this.minimaxService.calculateComputerMove(this.board);
           if (computerMove) {
             const [computerRow, computerColumn] = computerMove;
@@ -72,27 +76,23 @@ export class BoardComponent {
     }
   }
 
+  // Not being used now. It is used for random moves.
   makeComputerMove(): void {
-    // Generate a random move for Player O
     let row, column;
     do {
       row = Math.floor(Math.random() * this.boardSize);
       column = Math.floor(Math.random() * this.boardSize);
     } while (this.board[row][column] !== '');
 
-    // Make the move for Player O
     this.board[row][column] = 'O';
 
-    // Check if Player O wins
+    // Check if Computer wins
     if (this.checkForWin(row, column)) {
-      // alert('Computer wins!');
-      // this.initializeBoard();
       setTimeout(() => {
         alert('Computer wins!');
         this.initializeBoard();
-      }, 200); // Display the alert after 2 seconds
+      }, 200);
     } else {
-      // Switch back to Player X's turn
       this.currentPlayer = 'X';
     }
   }
@@ -150,14 +150,17 @@ export class BoardComponent {
         if (consecutiveCount >= 5) {
           return consecutiveCount;
         }
-      } else {
-        consecutiveCount = 0; // Reset count if consecutive sequence is broken
+      } 
+      else {
+        consecutiveCount = 0; //Reset
+        break;
       }
     }
 
     return consecutiveCount;
   }
 
+  
   // checkForWin(row: number, column: number): boolean {
   //   const currentPlayer = this.board[row][column];
 
@@ -184,36 +187,7 @@ export class BoardComponent {
   //   return false;
   // }
 
-  // checkConsecutive(
-  //   row: number,
-  //   column: number,
-  //   rowDirection: number,
-  //   colDirection: number,
-  //   player: string
-  // ): number {
-  //   let consecutiveCount = 0;
-  //   const boardSize = this.boardSize;
-
-  //   // Check in both directions (forward and backward)
-  //   for (let i = -4; i <= 4; i++) {
-  //     const newRow = row + i * rowDirection;
-  //     const newCol = column + i * colDirection;
-
-  //     if (
-  //       newRow >= 0 &&
-  //       newRow < boardSize &&
-  //       newCol >= 0 &&
-  //       newCol < boardSize &&
-  //       this.board[newRow][newCol] === player
-  //     ) {
-  //       consecutiveCount++;
-  //     } else {
-  //       break; // Stop counting if consecutive sequence is broken
-  //     }
-  //   }
-
-  //   return consecutiveCount;
-  // }
+  
 
 
   // invalidMove() {

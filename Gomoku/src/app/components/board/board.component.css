@@ -27,19 +27,18 @@
     height: 100vh;
   }
   
-  
+/*   
 .x-cell {
   background-color: rgb(201, 156, 59);
 }
 
 .o-cell {
   background-color: rgb(201, 156, 59);
-}
+} */
 
 img {
   width: 100%;
   height: 100%;
-
 }
 
   .cell {
