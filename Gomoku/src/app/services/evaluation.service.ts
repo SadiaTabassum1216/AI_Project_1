@@ -213,7 +213,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class PruningService {
+export class EvaluationService {
 
   constructor() { }
 
@@ -238,8 +238,23 @@ export class PruningService {
     return tieScore;
   }
 
+<<<<<<< HEAD:Gomoku/src/app/services/pruning.service.ts
    // Define the dimensions of the game board
    boardSize = 10;
+=======
+// Define scoring patterns and their corresponding scores
+//  scoringPatterns: { [pattern: string]: number } = {
+//   '11110': 1000,  // Five Xs in a row with one empty end
+//   '011110': 500, // Four Xs in a row with one empty end
+//   '01110': 50,   // Four Xs in a row with no empty end
+//   '001110': 25,  // Three Xs in a row with one empty end
+//   '011100': 25,  // Three Xs in a row with one empty end
+//   '0001110': 5,  // Two Xs in a row with one empty end
+//   '011000': 5,   // Two Xs in a row with one empty end
+//   '001100': 2,   // Two Xs in a row with no empty end
+//   '000110': 2,   // Two Xs in a row with no empty end
+// };
+>>>>>>> ea7f61af78b6dc653ebddfc5c4b1035ba2ca9d95:Gomoku/src/app/services/evaluation.service.ts
 
    // Helper function to generate all possible horizontal, vertical, and diagonal winning patterns
    generateWinningPatterns(boardSize: number): number[][][] {

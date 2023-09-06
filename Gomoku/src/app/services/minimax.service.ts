@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { PruningService } from './pruning.service';
+import { EvaluationService } from './evaluation.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MinimaxService {
 
-  constructor(private pruning: PruningService) { }
+  constructor(private pruning: EvaluationService) { }
   
   maxdepth: number=3;
 
-  
   // Function to find the best move for the computer player ('O')
   calculateComputerMove(board: string[][]): [number, number] | null {
     const bestMove = this.minimax(board, 0, false, -Infinity, Infinity);
@@ -52,7 +51,7 @@ export class MinimaxService {
             beta = Math.min(beta, bestScore);
           }
 
-          if (beta <= alpha) {
+          if(alpha >= beta){
             break; // Prune the branch
           }
         }
