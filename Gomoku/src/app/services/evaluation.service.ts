@@ -201,7 +201,6 @@ export class EvaluationService {
      return false;
    }
  
- 
    // Helper function to check if a specific pattern is present on the board
    checkPattern(board: string[][], pattern: number[][], player: string): boolean {
      for (const [row, col] of pattern) {
