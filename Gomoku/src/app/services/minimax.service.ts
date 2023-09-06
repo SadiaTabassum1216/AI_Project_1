@@ -8,7 +8,7 @@ export class MinimaxService {
 
   constructor(private pruning: EvaluationService) { }
   
-  maxdepth: number=4;
+  maxdepth: number=3;
 
   // Function to find the best move for the computer player ('O')
   calculateComputerMove(board: string[][]): [number, number] | null {
