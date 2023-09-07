@@ -31,7 +31,7 @@ export class MinimaxService {
     // Check if the game is over or the depth limit is reached
     const result = this.checkGameStatus(board);
     if (result !== null || depth >= this.maxDepth) {
-      return { score: this.evaluation.evaluate(board), move: [-1, -1] };
+      return { score: this.evaluation.evaluate(board, maximizingPlayer), move: [-1, -1] };
     }
 
     let bestMove: [number, number] = [-1, -1];
