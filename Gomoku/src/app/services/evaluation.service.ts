@@ -5,13 +5,11 @@ import { Injectable } from '@angular/core';
 })
 export class EvaluationService {
 
-
-
   private WIN_SCORE: number = 100000000;
-
+  private evaluationCount: { count: number };
 
   constructor() {
-
+    this.evaluationCount = { count: 0 };
   }
 
   evaluate(board: string[][]): number {
@@ -27,14 +25,14 @@ export class EvaluationService {
 
     // Check for a winning state for 'X'
     if (this.checkWinningState(board, 'X')) {
-     // console.log("noooo");
       return loseScore;
     }
+
     // Calculate the score for each of the 3 directions
     return (
-      this.evaluateHorizontal(board, playerStone) +
-      this.evaluateVertical(board, playerStone) +
-      this.evaluateDiagonal(board, playerStone)
+      this.evaluateHorizontal(board, this.playerStone) +
+      this.evaluateVertical(board, this.playerStone) +
+      this.evaluateDiagonal(board, this.playerStone)
     );
   }
 
@@ -70,14 +68,14 @@ export class EvaluationService {
   }
 
   private evaluateDiagonal(board: string[][], playerStone: string): number {
-    const evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
+    let evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
 
     // From bottom-left to top-right diagonally
     for (let k = 0; k <= 2 * (board.length - 1); k++) {
       const iStart = Math.max(0, k - board.length + 1);
       const iEnd = Math.min(board.length - 1, k);
       for (let i = iStart; i <= iEnd; ++i) {
-        this.evaluateDirections(board, i, k - i, playerStone, evaluations);
+        evaluations= this.evaluateDirections(board, i, k - i, playerStone, evaluations);
       }
       this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
@@ -87,15 +85,15 @@ export class EvaluationService {
       const iStart = Math.max(0, k);
       const iEnd = Math.min(board.length + k - 1, board.length - 1);
       for (let i = iStart; i <= iEnd; ++i) {
-        this.evaluateDirections(board, i, i - k, playerStone, evaluations);
+        evaluations=this.evaluateDirections(board, i, i - k, playerStone, evaluations);
       }
-      this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
+      evaluations=this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
 
     return evaluations[2];
   }
 
-  private evaluateDirections(board: string[][], i: number, j: number, playerStone: string, evals: number[]): void {
+  private evaluateDirections(board: string[][], i: number, j: number, playerStone: string, evals: number[]): number[] {
     // Check if the selected player has a stone in the current cell
     if (board[i][j] === playerStone) {
       // Increment consecutive stones count
@@ -130,13 +128,9 @@ export class EvaluationService {
       // Current cell is occupied by the opponent, next consecutive set may have 2 blocked sides
       evals[1] = 2;
     }
-
-    
-  
-   
   }
 
-  private evaluateDirectionsAfterOnePass(evals: number[], playerStone: string): void {
+  private evaluateDirectionsAfterOnePass(evals: number[], playerStone: string): number[] {
     // End of row, check if there were any consecutive stones before we reached the right border
     if (evals[0] > 0) {
       evals[2] += this.getConsecutiveSetScore(evals[0], evals[1], playerStone);
@@ -144,6 +138,8 @@ export class EvaluationService {
     // Reset consecutive stone and blocks count
     evals[0] = 0;
     evals[1] = 2;
+
+    return evals;
   }
 
   private getConsecutiveSetScore(count: number, blocks: number, playerStone: string): number {
@@ -156,75 +152,63 @@ export class EvaluationService {
 
     switch (count) {
       case 5: {
-        // 5 consecutive wins the game
+        console.log('5');
         return winGuarantee;
       }
       case 4: {
-        // 4 consecutive stones in the player's turn guarantees a win.
-        // (Player can win the game by placing the 5th stone after the set)
         if (playerStone === 'O') {
+          console.log('4.1');
           return winGuarantee;
         } else {
-          // Opponent's turn
-          // If neither side is blocked, 4 consecutive stones guarantee a win in the next turn.
-          // (Opponent can only place a stone that will block the remaining side, otherwise the game is lost
-          // in the next turn). So a relatively high score is given for this set.
           if (blocks === 0) {
+            console.log('4.2');
             return winGuarantee / 4;
           }
-          // If only a single side is blocked, 4 consecutive stones limit the opponent's move
-          // (Opponent can only place a stone that will block the remaining side, otherwise the game is lost
-          // in the next turn). So a relatively high score is given for this set.
           else {
+            console.log('4.3');
             return 200;
           }
         }
       }
       case 3: {
-        // 3 consecutive stones
         if (blocks === 0) {
-          // Neither side is blocked.
-          // If it's the current player's turn, a win is guaranteed in the next 2 turns.
-          // (Player places another stone to make the set 4 consecutive; opponent can only block one side)
-          // However, the opponent may win the game in the next turn; therefore, this score is lower than win
-          // guaranteed scores but still a very high score.
           if (playerStone === 'O') {
+             console.log('3.1');
             return 50000;
           }
-          // If it's the opponent's turn, this set forces the opponent to block one of the sides of the set.
-          // So a relatively high score is given for this set.
           else {
             return 200;
           }
         } else {
-          // One of the sides is blocked.
-          // Playmaker scores
           if (playerStone === 'O') {
+            // console.log('3.2');
             return 10;
           } else {
+            // console.log('3.3');
             return 5;
           }
         }
       }
       case 2: {
-        // 2 consecutive stones
-        // Playmaker scores
         if (blocks === 0) {
           if (playerStone === 'O') {
+            // console.log('2.1');
             return 7;
           } else {
+            // console.log('2.2');
             return 5;
           }
         } else {
+          // console.log('2.3');
           return 3;
         }
       }
       case 1: {
+        // console.log('1');
         return 1;
       }
     }
 
-    // More than 5 consecutive stones?
     return winGuarantee * 2;
   }
 
