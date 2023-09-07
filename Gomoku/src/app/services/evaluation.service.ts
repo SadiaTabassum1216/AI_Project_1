@@ -8,10 +8,10 @@ export class EvaluationService {
 
 
   private WIN_SCORE: number = 100000000;
-  private evaluationCount: { count: number };
+
 
   constructor() {
-    this.evaluationCount = { count: 0 };
+
   }
 
   evaluate(board: string[][]): number {
@@ -27,9 +27,9 @@ export class EvaluationService {
 
     // Check for a winning state for 'X'
     if (this.checkWinningState(board, 'X')) {
+     // console.log("noooo");
       return loseScore;
     }
-
     // Calculate the score for each of the 3 directions
     return (
       this.evaluateHorizontal(board, playerStone) +
@@ -47,7 +47,12 @@ export class EvaluationService {
       }
       this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
+    // let hasLogged = false;
 
+    // if (!hasLogged) {
+    //   console.log(playerStone+"hey"+ evaluations[2]);
+    //   hasLogged = true;
+ //   }
     return evaluations[2];
   }
 
@@ -125,6 +130,10 @@ export class EvaluationService {
       // Current cell is occupied by the opponent, next consecutive set may have 2 blocked sides
       evals[1] = 2;
     }
+
+    
+  
+   
   }
 
   private evaluateDirectionsAfterOnePass(evals: number[], playerStone: string): void {
