@@ -17,6 +17,19 @@ export class EvaluationService {
   evaluate(board: string[][]): number {
     const playerStone = 'O';
 
+    const winScore = 10000;
+    const loseScore = -10000;
+
+    // Check for a winning state for 'O'
+    if (this.checkWinningState(board, 'O')) {
+      return winScore;
+    }
+
+    // Check for a winning state for 'X'
+    if (this.checkWinningState(board, 'X')) {
+      return loseScore;
+    }
+
     // Calculate the score for each of the 3 directions
     return (
       this.evaluateHorizontal(board, playerStone) +
@@ -208,7 +221,7 @@ export class EvaluationService {
 
 
 
-  
+
   // evaluate(board: string[][]): number {
   //   // Define the score values for different game states
   //   const winScore = 10000;

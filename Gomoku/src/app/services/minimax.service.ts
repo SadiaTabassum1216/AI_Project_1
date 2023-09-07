@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 import { EvaluationService } from './evaluation.service';
+import { MovesService } from './moves.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MinimaxService {
 
-  constructor(private evaluation: EvaluationService) { }
+  constructor(private evaluation: EvaluationService,
+    private moves: MovesService) { }
 
   maxDepth: number = 3;
 
   // Function to find the best move for the computer player ('O')
   calculateComputerMove(board: string[][]): [number, number] | null {
     const bestMove = this.minimax(board, 0, false, -Infinity, Infinity);
-    console.log("Best Move score: "+bestMove.score);
-    console.log("Best Move: "+bestMove.move);
+    console.log("Best Move score: " + bestMove.score);
+    console.log("Best Move: " + bestMove.move);
     return bestMove.move;
   }
 
@@ -35,30 +37,30 @@ export class MinimaxService {
     let bestMove: [number, number] = [-1, -1];
     let bestScore: number = maximizingPlayer ? -Infinity : Infinity;
 
-    for (let row = 0; row < board.length; row++) {
-      for (let col = 0; col < board[row].length; col++) {
-        if (board[row][col] === '') {
-          // Try this empty cell
-          board[row][col] = maximizingPlayer ? 'O' : 'X';
-          const score = this.minimax(board, depth + 1, !maximizingPlayer, alpha, beta).score;
-          board[row][col] = ''; // Undo the move
+    const validMoves: [number, number][] = this.moves.generateMoves(board);
 
-          if (maximizingPlayer && score > bestScore) {
-            bestScore = score;
-            bestMove = [row, col];
-            alpha = Math.max(alpha, bestScore);
-          } else if (!maximizingPlayer && score < bestScore) {
-            bestScore = score;
-            bestMove = [row, col];
-            beta = Math.min(beta, bestScore);
-          }
 
-          if (alpha >= beta) {
-            break; // Prune the branch
-          }
-        }
+    for (const [row, col] of validMoves) {
+      // Try this empty cell
+      board[row][col] = maximizingPlayer ? 'O' : 'X';
+      const score = this.minimax(board, depth + 1, !maximizingPlayer, alpha, beta).score;
+      board[row][col] = ''; // Undo the move
+
+      if (maximizingPlayer && score > bestScore) {
+        bestScore = score;
+        bestMove = [row, col];
+        alpha = Math.max(alpha, bestScore);
+      } else if (!maximizingPlayer && score < bestScore) {
+        bestScore = score;
+        bestMove = [row, col];
+        beta = Math.min(beta, bestScore);
+      }
+
+      if (alpha >= beta) {
+        break; // Prune the branch
       }
     }
+
 
     return { score: bestScore, move: bestMove };
   }
