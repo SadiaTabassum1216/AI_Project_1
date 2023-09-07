@@ -30,6 +30,18 @@ export class BoardComponent {
 
   makeMove(row: number, column: number): void {
     if (this.board[row][column] === '') {
+
+      //print current state
+      console.log('Row: '+row+' Column: '+column)
+      console.log('Print board: ')
+      for (let r = 0; r < this.board.length; r++) {
+        let rowStr = '';
+        for (let c = 0; c < this.board[r].length; c++) {
+          rowStr += this.board[r][c] + '_ ';
+        }
+        console.log(rowStr);
+      }
+      
       this.board[row][column] = this.currentPlayer;
 
       if (this.evaluation.checkWinningState(this.board, this.currentPlayer)) {
@@ -49,6 +61,7 @@ export class BoardComponent {
           const computerMove = this.minimaxService.calculateComputerMove(this.board);
           if (computerMove) {
             const [computerRow, computerColumn] = computerMove;
+            // console.log("Score: "+computerMove);
             this.makeMove(computerRow, computerColumn);
           }
         }

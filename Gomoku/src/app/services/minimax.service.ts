@@ -6,13 +6,15 @@ import { EvaluationService } from './evaluation.service';
 })
 export class MinimaxService {
 
-  constructor(private pruning: EvaluationService) { }
-  
-  maxdepth: number=3;
+  constructor(private evaluation: EvaluationService) { }
+
+  maxDepth: number = 3;
 
   // Function to find the best move for the computer player ('O')
   calculateComputerMove(board: string[][]): [number, number] | null {
     const bestMove = this.minimax(board, 0, false, -Infinity, Infinity);
+    console.log("Best Move score: "+bestMove.score);
+    console.log("Best Move: "+bestMove.move);
     return bestMove.move;
   }
 
@@ -26,8 +28,8 @@ export class MinimaxService {
   ): { score: number; move: [number, number] } {
     // Check if the game is over or the depth limit is reached
     const result = this.checkGameStatus(board);
-    if (result !== null || depth >= this.maxdepth) {
-      return { score: this.pruning.evaluate(board), move: [-1, -1] };
+    if (result !== null || depth >= this.maxDepth) {
+      return { score: this.evaluation.evaluate(board), move: [-1, -1] };
     }
 
     let bestMove: [number, number] = [-1, -1];
@@ -51,7 +53,7 @@ export class MinimaxService {
             beta = Math.min(beta, bestScore);
           }
 
-          if(alpha >= beta){
+          if (alpha >= beta) {
             break; // Prune the branch
           }
         }
@@ -61,27 +63,27 @@ export class MinimaxService {
     return { score: bestScore, move: bestMove };
   }
 
-  
   // Check if the game is over and return the result
   checkGameStatus(board: string[][]): string | null {
     // Check for a winning state for 'O'
-    if (this.pruning.checkWinningState(board, 'O')) {
+    if (this.evaluation.checkWinningState(board, 'O')) {
       return 'O';
     }
-  
+
     // Check for a winning state for 'X'
-    if (this.pruning.checkWinningState(board, 'X')) {
+    if (this.evaluation.checkWinningState(board, 'X')) {
       return 'X';
     }
-  
+
     // Check for a tie (board is full)
     if (this.isBoardFull(board)) {
       return 'Tie';
     }
-  
+
     // The game is still ongoing
     return null;
   }
+
   // Helper function to check if the board is full
   isBoardFull(board: string[][]): boolean {
     for (let row = 0; row < board.length; row++) {
@@ -93,6 +95,4 @@ export class MinimaxService {
     }
     return true;
   }
-
-  
 }

@@ -2,9 +2,9 @@
   <h1>Gomoku</h1>
   <div class="game-board">
    
-    <div *ngFor="let row of board; let rowIndex = index" class="row">
+    <div *ngFor="let r of board; let rowIndex = index" class="row">
       <div
-        *ngFor="let cell of row; let columnIndex = index"
+        *ngFor="let cell of r; let columnIndex = index"
         class="cell"
         [ngClass]="{ 'x-cell': cell === 'X', 'o-cell': cell === 'O' }"
         (click)="makeMove(rowIndex, columnIndex)"
@@ -13,7 +13,7 @@
         <img *ngIf="cell === 'O'" src="assets/black-pawn.png" alt="Black Pawn" />
       </div>
     </div>
-  </div>
+    
 
  
   <button class="new-game-button" (click)="newGame()">New Game</button>
