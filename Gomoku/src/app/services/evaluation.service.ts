@@ -13,22 +13,9 @@ export class EvaluationService {
 
   evaluate(board: string[][], maximizingPlayer: boolean): number {
     if (maximizingPlayer)
-      this.playerStone = 'X';
-    else
       this.playerStone = 'O';
-
-    const winScore = this.WIN_SCORE;
-    const loseScore = -this.WIN_SCORE;
-
-    // Check for a winning state for 'O'
-    if (this.checkWinningState(board, 'O')) {
-      return winScore;
-    }
-
-    // Check for a winning state for 'X'
-    if (this.checkWinningState(board, 'X')) {
-      return loseScore;
-    }
+    else
+      this.playerStone = 'X';
 
     return (
       this.evaluateHorizontal(board, this.playerStone) +
@@ -38,34 +25,33 @@ export class EvaluationService {
   }
 
   private evaluateHorizontal(board: string[][], playerStone: string): number {
-    const evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
+    let evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
 
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
-        this.evaluateDirections(board, i, j, playerStone, evaluations);
+      evaluations=  this.evaluateDirections(board, i, j, playerStone, evaluations);
       }
-      this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
+     evaluations= this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
 
     return evaluations[2];
   }
 
   private evaluateVertical(board: string[][], playerStone: string): number {
-    const evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
+    let evaluations = [0, 2, 0]; 
 
     for (let j = 0; j < board[0].length; j++) {
       for (let i = 0; i < board.length; i++) {
-        this.evaluateDirections(board, i, j, playerStone, evaluations);
+        evaluations=this.evaluateDirections(board, i, j, playerStone, evaluations);
       }
-      this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
+     evaluations= this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
 
     return evaluations[2];
   }
 
   private evaluateDiagonal(board: string[][], playerStone: string): number {
-    let evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
-
+    let evaluations = [0, 2, 0];
     // From bottom-left to top-right diagonally
     for (let k = 0; k <= 2 * (board.length - 1); k++) {
       const iStart = Math.max(0, k - board.length + 1);
@@ -241,79 +227,139 @@ export class EvaluationService {
 
 
 
-  // Helper function to generate all possible horizontal, vertical, and diagonal winning patterns
-  generateWinningPatterns(boardSize: number): number[][][] {
-    const patterns: number[][][] = [];
 
-    // Horizontal patterns
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col <= boardSize - 5; col++) {
-        const pattern: number[][] = [];
-        for (let i = 0; i < 5; i++) {
-          pattern.push([row, col + i]);
-        }
-        patterns.push(pattern);
-      }
-    }
+  //**Sampad logic***
+  // private WINNING_PLY: number = 5;
+  // private WINNER_SCORE: number = 50000;
+  // private ROLE: string = 'O'; // Default role is 'O'
 
-    // Vertical patterns
-    for (let row = 0; row <= boardSize - 5; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        const pattern: number[][] = [];
-        for (let i = 0; i < 5; i++) {
-          pattern.push([row + i, col]);
-        }
-        patterns.push(pattern);
-      }
-    }
+  // // Function to set the player role ('X' or 'O')
+  // setPlayerRole(role: string): void {
+  //   this.ROLE = role;
+  // }
 
-    // Diagonal patterns (top-left to bottom-right)
-    for (let row = 0; row <= boardSize - 5; row++) {
-      for (let col = 0; col <= boardSize - 5; col++) {
-        const pattern: number[][] = [];
-        for (let i = 0; i < 5; i++) {
-          pattern.push([row + i, col + i]);
-        }
-        patterns.push(pattern);
-      }
-    }
+  // evaluate(board: string[][], maximizingPlayer: boolean): number {
+  //   this.ROLE = maximizingPlayer ? 'O' : 'X';
 
-    // Diagonal patterns (top-right to bottom-left)
-    for (let row = 0; row <= boardSize - 5; row++) {
-      for (let col = boardSize - 1; col >= 4; col--) {
-        const pattern: number[][] = [];
-        for (let i = 0; i < 5; i++) {
-          pattern.push([row + i, col - i]);
-        }
-        patterns.push(pattern);
-      }
-    }
-
-    return patterns;
-  }
-
-  boardSize = 10;
-  allWinningPatterns: number[][][] = this.generateWinningPatterns(this.boardSize);
-
-  // Helper function to check if a player has won
-  checkWinningState(board: string[][], player: string): boolean {
-    for (const pattern of this.allWinningPatterns) {
-      if (this.checkPattern(board, pattern, player)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  //   return this.findUtilityValue(board);
+  // }
 
 
-  // Helper function to check if a specific pattern is present on the board
-  checkPattern(board: string[][], pattern: number[][], player: string): boolean {
-    for (const [row, col] of pattern) {
-      if (board[row][col] !== player) {
-        return false;
-      }
-    }
-    return true;
-  }
+  // // Function to find the utility value of the current state
+  // findUtilityValue(currentState: string[][]): number {
+  //   let utilityScore = 0;
+
+  //   for (let i = 0; i < currentState.length; i++) {
+  //     for (let j = 0; j < currentState[i].length; j++) {
+  //       utilityScore +=
+  //         this.checkLeftSide(currentState, i, j) +
+  //         this.checkRightSide(currentState, i, j) +
+  //         this.checkUpSide(currentState, i, j) +
+  //         this.checkDownSide(currentState, i, j) +
+  //         this.checkLeftDiagonal(currentState, i, j) +
+  //         this.checkRightDiagonal(currentState, i, j);
+  //     }
+  //   }
+
+  //   return utilityScore;
+  // }
+
+  // // Function to check consecutive stones on the left side
+  // private checkLeftSide(currentState: string[][], a: number, b: number): number {
+  //   let counter = 0;
+
+  //   for (let i = a; i >= 0; i--) {
+  //     if (currentState[i][b] === this.ROLE) {
+  //       counter++;
+  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
+  //     } else {
+  //       return counter * counter * 5;
+  //     }
+  //   }
+
+  //   return counter;
+  // }
+
+  // // Function to check consecutive stones on the right side
+  // private checkRightSide(currentState: string[][], a: number, b: number): number {
+  //   let counter = 0;
+
+  //   for (let i = a; i < currentState.length; i++) {
+  //     if (currentState[i][b] === this.ROLE) {
+  //       counter++;
+  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
+  //     } else {
+  //       return counter * counter * 5;
+  //     }
+  //   }
+
+  //   return counter;
+  // }
+
+  // // Function to check consecutive stones on the up side
+  // private checkUpSide(currentState: string[][], a: number, b: number): number {
+  //   let counter = 0;
+
+  //   for (let j = b; j >= 0; j--) {
+  //     if (currentState[a][j] === this.ROLE) {
+  //       counter++;
+  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
+  //     } else {
+  //       return counter * counter * 5;
+  //     }
+  //   }
+
+  //   return counter;
+  // }
+
+  // // Function to check consecutive stones on the down side
+  // private checkDownSide(currentState: string[][], a: number, b: number): number {
+  //   let counter = 0;
+
+  //   for (let j = b; j < currentState.length; j++) {
+  //     if (currentState[a][j] === this.ROLE) {
+  //       counter++;
+  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
+  //     } else {
+  //       return counter * counter * 5;
+  //     }
+  //   }
+
+  //   return counter;
+  // }
+
+  // // Function to check consecutive stones on the left diagonal
+  // private checkLeftDiagonal(currentState: string[][], a: number, b: number): number {
+  //   let counter = 0;
+
+  //   for (let i = a, j = b; i < currentState.length && j < currentState.length; i++, j++) {
+  //     if (currentState[i][j] === this.ROLE) {
+  //       counter++;
+  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
+  //     } else {
+  //       return counter * counter * 5;
+  //     }
+  //   }
+
+  //   return counter;
+  // }
+
+  // // Function to check consecutive stones on the right diagonal
+  // private checkRightDiagonal(currentState: string[][], a: number, b: number): number {
+  //   let counter = 0;
+
+  //   for (let i = a, j = b; i >= 0 && j >= 0; i--, j--) {
+  //     if (currentState[i][j] === this.ROLE) {
+  //       counter++;
+  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
+  //     } else {
+  //       return counter * counter * 5;
+  //     }
+  //   }
+
+  //   return counter;
+  // }
+  
+ 
 
 }
