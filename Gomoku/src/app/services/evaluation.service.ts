@@ -6,17 +6,29 @@ import { Injectable } from '@angular/core';
 export class EvaluationService {
 
   private WIN_SCORE: number = 100000000;
-  playerStone: string = '';
+  private evaluationCount: { count: number };
 
   constructor() {
+    this.evaluationCount = { count: 0 };
   }
 
-  evaluate(board: string[][], maximizingPlayer: boolean): number {
-    if (maximizingPlayer)
-      this.playerStone = 'O';
-    else
-      this.playerStone = 'X';
+  evaluate(board: string[][]): number {
+    const playerStone = 'O';
 
+    const winScore = 10000;
+    const loseScore = -10000;
+
+    // Check for a winning state for 'O'
+    if (this.checkWinningState(board, 'O')) {
+      return winScore;
+    }
+
+    // Check for a winning state for 'X'
+    if (this.checkWinningState(board, 'X')) {
+      return loseScore;
+    }
+
+    // Calculate the score for each of the 3 directions
     return (
       this.evaluateHorizontal(board, this.playerStone) +
       this.evaluateVertical(board, this.playerStone) +
@@ -33,7 +45,12 @@ export class EvaluationService {
       }
       this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
+    // let hasLogged = false;
 
+    // if (!hasLogged) {
+    //   console.log(playerStone+"hey"+ evaluations[2]);
+    //   hasLogged = true;
+ //   }
     return evaluations[2];
   }
 
@@ -111,7 +128,6 @@ export class EvaluationService {
       // Current cell is occupied by the opponent, next consecutive set may have 2 blocked sides
       evals[1] = 2;
     }
-    return evals;
   }
 
   private evaluateDirectionsAfterOnePass(evals: number[], playerStone: string): number[] {
