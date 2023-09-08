@@ -46,7 +46,13 @@ export class BoardComponent {
           }
           this.newGame();
         }, 200);
-      } else {
+      } else if (this.check.checkGameStatus(this.board) === 'Tie') {
+        setTimeout(() => {
+          alert('It\'s a tie!');
+          this.newGame();
+        }, 200);
+      }
+       else {
         // Switch turn
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
