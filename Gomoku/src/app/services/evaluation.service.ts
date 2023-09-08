@@ -134,6 +134,10 @@ export class EvaluationService {
       return 0;
     }
 
+    // console.log("count: "+count);
+    // console.log("block: "+blocks);
+    // console.log("player: "+playerStone);
+
     switch (count) {
       case 5: {
         console.log('5');

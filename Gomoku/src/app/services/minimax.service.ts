@@ -14,7 +14,7 @@ export class MinimaxService {
 
   // Function to find the best move for the computer player ('O')
   calculateComputerMove(board: string[][]): [number, number] | null {
-    const bestMove = this.minimax(board, 0, false, -Infinity, Infinity);
+    const bestMove = this.minimax(board, 0, true, -Infinity, Infinity);
     console.log("Best Move score: " + bestMove.score);
     console.log("Best Move: " + bestMove.move);
     return bestMove.move;
@@ -60,8 +60,7 @@ export class MinimaxService {
         break; // Prune the branch
       }
     }
-
-
+  
     return { score: bestScore, move: bestMove };
   }
 
