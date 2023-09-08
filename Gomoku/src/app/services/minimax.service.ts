@@ -15,7 +15,7 @@ export class MinimaxService {
   maxDepth: number = 3;
 
   calculateComputerMove(board: string[][]): [number, number] | null {
-    const bestMove = this.minimax(board, 0, true, -Infinity, Infinity);
+    const bestMove = this.minimax(board, 0, false, -Infinity, Infinity);
     console.log("Best Move score: " + bestMove.score);
     console.log("Best Move: " + bestMove.move);
     return bestMove.move;

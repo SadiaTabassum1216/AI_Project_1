@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MinimaxService } from './minimax.service';
 import { CheckBoardService } from './check-board.service';
 
 @Injectable({
@@ -9,18 +8,44 @@ export class EvaluationService {
 
   private WIN_SCORE: number = 100000000;
   playerStone: string = '';
+  max_count: number=0;
 
   constructor( private check: CheckBoardService) {
   }
 
   evaluate(board: string[][], maximizingPlayer: boolean): number {
-      this.playerStone = maximizingPlayer ? 'O' : 'X';
+      this.playerStone = maximizingPlayer ? 'O' : 'X'; //O
+      // this.playerStone ='O';
+
+      const winScore = this.WIN_SCORE;
+      const loseScore = -this.WIN_SCORE;
+  
+      // Check for a winning state for 'O'
+      if (this.check.checkWinningState(board, 'O')) {
+        return winScore;
+      }
+  
+      // Check for a winning state for 'X'
+      if (this.check.checkWinningState(board, 'X')) {
+        return loseScore;
+      }
 
       let totalScore = 0;
+      // for (let i = 0; i < board.length; i++) {
+      //   for (let j = 0; j < board[i].length; j++) {
+      //     totalScore+=this.evaluateHorizontal(board, this.playerStone) +
+      //     this.evaluateVertical(board, this.playerStone) +
+      //     this.evaluateDiagonal(board, this.playerStone);
+    
+      //   }
+      // }
 
+     
       totalScore=this.evaluateHorizontal(board, this.playerStone) +
       this.evaluateVertical(board, this.playerStone) +
       this.evaluateDiagonal(board, this.playerStone);
+
+      // console.log("Count: "+this.max_count);
 
     return totalScore;
       
@@ -31,9 +56,9 @@ export class EvaluationService {
 
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
-      evaluations=  this.evaluateDirections(board, i, j, playerStone, evaluations);
+      this.evaluateDirections(board, i, j, playerStone, evaluations);
       }
-     evaluations= this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
+    this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
 
     return evaluations[2];
@@ -44,9 +69,9 @@ export class EvaluationService {
 
     for (let j = 0; j < board[0].length; j++) {
       for (let i = 0; i < board.length; i++) {
-        evaluations=this.evaluateDirections(board, i, j, playerStone, evaluations);
+       this.evaluateDirections(board, i, j, playerStone, evaluations);
       }
-     evaluations= this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
+     this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
 
     return evaluations[2];
@@ -59,7 +84,7 @@ export class EvaluationService {
       const iStart = Math.max(0, k - board.length + 1);
       const iEnd = Math.min(board.length - 1, k);
       for (let i = iStart; i <= iEnd; ++i) {
-        evaluations= this.evaluateDirections(board, i, k - i, playerStone, evaluations);
+       this.evaluateDirections(board, i, k - i, playerStone, evaluations);
       }
       this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
@@ -69,15 +94,15 @@ export class EvaluationService {
       const iStart = Math.max(0, k);
       const iEnd = Math.min(board.length + k - 1, board.length - 1);
       for (let i = iStart; i <= iEnd; ++i) {
-        evaluations=this.evaluateDirections(board, i, i - k, playerStone, evaluations);
+       this.evaluateDirections(board, i, i - k, playerStone, evaluations);
       }
-      evaluations=this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
+     this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
 
     return evaluations[2];
   }
 
-  private evaluateDirections(board: string[][], i: number, j: number, playerStone: string, evals: number[]): number[] {
+  private evaluateDirections(board: string[][], i: number, j: number, playerStone: string, evals: number[]): void {
     // Check if the selected player has a stone in the current cell
     if (board[i][j] === playerStone) {
       // Increment consecutive stones count
@@ -112,7 +137,7 @@ export class EvaluationService {
       // Current cell is occupied by the opponent, next consecutive set may have 2 blocked sides
       evals[1] = 2;
     }
-    return evals;
+    // return evals;
   }
 
   private evaluateDirectionsAfterOnePass(evals: number[], playerStone: string): number[] {
@@ -128,11 +153,18 @@ export class EvaluationService {
   }
 
   private getConsecutiveSetScore(count: number, blocks: number, playerStone: string): number {
-    const winGuarantee = this.WIN_SCORE;
+    let winGuarantee = this.WIN_SCORE;
 
     // If both sides of a set are blocked, this set is worthless, return 0 points.
     if (blocks === 2 && count < 5) {
       return 0;
+    }
+
+    if(count>this.max_count)
+    this.max_count=count;
+
+    if (playerStone !== 'O') {
+      winGuarantee = -winGuarantee;
     }
 
     // console.log("count: "+count);
@@ -147,8 +179,6 @@ export class EvaluationService {
       case 1: return 1;
       default: return winGuarantee * 2;
     }
-
-   
   }
 
 
@@ -218,7 +248,7 @@ export class EvaluationService {
 
 
   //**Sampad logic***
-  // private WINNING_PLY: number = 5;
+  private WINNING_PLY: number = 5;
   // private WINNER_SCORE: number = 50000;
   // private ROLE: string = 'O'; // Default role is 'O'
 
