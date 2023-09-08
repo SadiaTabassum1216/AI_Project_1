@@ -37,6 +37,9 @@ export class BoardComponent {
 
       this.board[row][column] = this.currentPlayer;
 
+      console.log("White: "+this.evaluation.evaluate(this.board, false, true));
+      console.log("Black: "+this.evaluation.evaluate(this.board, true, true));
+
       if (this.check.checkWinningState(this.board, this.currentPlayer)) {
         setTimeout(() => {
           if (this.currentPlayer === 'X') {
