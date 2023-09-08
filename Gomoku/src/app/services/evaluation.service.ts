@@ -168,10 +168,6 @@ export class EvaluationService {
       case 1: return 1;
       default: return winGuarantee * 2;
     }
-  }
-
-
-
-  
+  } 
 
 }
