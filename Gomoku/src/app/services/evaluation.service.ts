@@ -6,17 +6,19 @@ import { Injectable } from '@angular/core';
 export class EvaluationService {
 
   private WIN_SCORE: number = 100000000;
-  private evaluationCount: { count: number };
+  playerStone: string = '';
 
   constructor() {
-    this.evaluationCount = { count: 0 };
   }
 
-  evaluate(board: string[][]): number {
-    const playerStone = 'O';
+  evaluate(board: string[][], maximizingPlayer: boolean): number {
+    if (maximizingPlayer)
+      this.playerStone = 'X';
+    else
+      this.playerStone = 'O';
 
-    const winScore = 10000;
-    const loseScore = -10000;
+    const winScore = this.WIN_SCORE;
+    const loseScore = -this.WIN_SCORE;
 
     // Check for a winning state for 'O'
     if (this.checkWinningState(board, 'O')) {
@@ -28,7 +30,6 @@ export class EvaluationService {
       return loseScore;
     }
 
-    // Calculate the score for each of the 3 directions
     return (
       this.evaluateHorizontal(board, this.playerStone) +
       this.evaluateVertical(board, this.playerStone) +
@@ -45,12 +46,7 @@ export class EvaluationService {
       }
       this.evaluateDirectionsAfterOnePass(evaluations, playerStone);
     }
-    // let hasLogged = false;
 
-    // if (!hasLogged) {
-    //   console.log(playerStone+"hey"+ evaluations[2]);
-    //   hasLogged = true;
- //   }
     return evaluations[2];
   }
 
@@ -128,6 +124,7 @@ export class EvaluationService {
       // Current cell is occupied by the opponent, next consecutive set may have 2 blocked sides
       evals[1] = 2;
     }
+    return evals;
   }
 
   private evaluateDirectionsAfterOnePass(evals: number[], playerStone: string): number[] {
@@ -160,7 +157,7 @@ export class EvaluationService {
         return winGuarantee;
       }
       case 4: {
-        if (playerStone === 'O') {
+        if (playerStone === 'X') {
           console.log('4.1');
           return winGuarantee;
         } else {
