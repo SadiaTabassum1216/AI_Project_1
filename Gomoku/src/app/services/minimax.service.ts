@@ -16,10 +16,8 @@ export class MinimaxService {
     private check: CheckBoardService) { }
 
   maxDepth: number = 3;
-  validMoves: [number, number][] =[];
 
   calculateComputerMove(board: string[][]): [number, number] | null {
-    this.validMoves= this.moves.generateMoves(board);
     const bestMove = this.minimax(board, this.maxDepth, true, -Infinity, Infinity);
     console.log("Best Move score: " + bestMove.score);
     console.log("Best Move: " + bestMove.move);
@@ -38,9 +36,9 @@ export class MinimaxService {
   let bestMove: [number, number] = [-1, -1];
   let bestScore: number = maximizingPlayer ? -Infinity : Infinity;
 
-  // const validMoves: [number, number][] = this.moves.generateMoves(board);
+  const validMoves: [number, number][] = this.moves.generateMoves(board);
 
-  for (const [row, col] of this.validMoves) {
+  for (const [row, col] of validMoves) {
     board[row][col] = maximizingPlayer ? 'O' : 'X'; // Make a move
     const score = this.minimax(board, depth - 1, !maximizingPlayer, alpha, beta).score; 
     board[row][col] = ''; // Undo the move
