@@ -15,7 +15,7 @@ export class MinimaxService {
   maxDepth: number = 3;
 
   calculateComputerMove(board: string[][]): [number, number] | null {
-    const bestMove = this.minimax(board, 0, false, -Infinity, Infinity);
+    const bestMove = this.minimax(board, 0, true, -Infinity, Infinity);
     console.log("Best Move score: " + bestMove.score);
     console.log("Best Move: " + bestMove.move);
     return bestMove.move;
@@ -25,7 +25,7 @@ export class MinimaxService {
   { score: number; move: [number, number] } {
     const result = this.check.checkGameStatus(board);
     if (result !== null || depth >= this.maxDepth) {
-      return { score: this.evaluation.evaluate(board, maximizingPlayer), move: [-1, -1] };
+      return { score: this.evaluation.evaluateRelativeScoreForComputer(board, maximizingPlayer), move: [-1, -1] };
     }
 
     let bestMove: [number, number] = [-1, -1];

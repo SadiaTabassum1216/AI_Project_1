@@ -13,33 +13,27 @@ export class EvaluationService {
   constructor( private check: CheckBoardService) {
   }
 
-  evaluate(board: string[][], maximizingPlayer: boolean): number {
-      this.playerStone = maximizingPlayer ? 'O' : 'X'; //O
-      // this.playerStone ='O';
+  evaluateRelativeScoreForComputer(board: string[][], isAI: boolean): number {
+    // Calculate the score for the computer (black) and human (white)
+    let computerScore = this.evaluate(board, isAI);
+    let humanScore = this.evaluate(board, !isAI);
+  
+    // If humanScore is 0, set it to 1 to avoid division by zero
+    if (humanScore === 0) {
+      humanScore = 1.0;
+    }
+  
+    // Calculate the relative score of the computer (black) against the human (white)
+    const relativeScore = computerScore / humanScore;
+  
+    return relativeScore;
+  }
+  
 
-      const winScore = this.WIN_SCORE;
-      const loseScore = -this.WIN_SCORE;
-  
-      // Check for a winning state for 'O'
-      if (this.check.checkWinningState(board, 'O')) {
-        return winScore;
-      }
-  
-      // Check for a winning state for 'X'
-      if (this.check.checkWinningState(board, 'X')) {
-        return loseScore;
-      }
+  evaluate(board: string[][], maximizingPlayer: boolean): number {
+      this.playerStone = maximizingPlayer ? 'O' : 'X';
 
       let totalScore = 0;
-      // for (let i = 0; i < board.length; i++) {
-      //   for (let j = 0; j < board[i].length; j++) {
-      //     totalScore+=this.evaluateHorizontal(board, this.playerStone) +
-      //     this.evaluateVertical(board, this.playerStone) +
-      //     this.evaluateDiagonal(board, this.playerStone);
-    
-      //   }
-      // }
-
      
       totalScore=this.evaluateHorizontal(board, this.playerStone) +
       this.evaluateVertical(board, this.playerStone) +
@@ -103,12 +97,10 @@ export class EvaluationService {
   }
 
   private evaluateDirections(board: string[][], i: number, j: number, playerStone: string, evals: number[]): void {
-    // Check if the selected player has a stone in the current cell
     if (board[i][j] === playerStone) {
-      // Increment consecutive stones count
       evals[0]++;
     }
-    // Check if cell is empty
+ 
     else if (board[i][j] === '') {
       // Check if there were any consecutive stones before this empty cell
       if (evals[0] > 0) {
@@ -120,12 +112,9 @@ export class EvaluationService {
         evals[0] = 0;
         // Current cell is empty, next consecutive set will have at most 1 blocked side.
       }
-      // No consecutive stones.
-      // Current cell is empty, next consecutive set will have at most 1 blocked side.
+      
       evals[1] = 1;
     }
-    // Cell is occupied by the opponent
-    // Check if there were any consecutive stones before this empty cell
     else if (evals[0] > 0) {
       // Get consecutive set score
       evals[2] += this.getConsecutiveSetScore(evals[0], evals[1], playerStone);
@@ -248,7 +237,7 @@ export class EvaluationService {
 
 
   //**Sampad logic***
-  private WINNING_PLY: number = 5;
+  // private WINNING_PLY: number = 5;
   // private WINNER_SCORE: number = 50000;
   // private ROLE: string = 'O'; // Default role is 'O'
 
