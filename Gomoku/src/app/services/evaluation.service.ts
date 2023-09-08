@@ -10,36 +10,30 @@ export class EvaluationService {
   playerStone: string = '';
   max_count: number=0;
 
-  constructor( private check: CheckBoardService) {
+  constructor() {
   }
 
-  evaluate(board: string[][], maximizingPlayer: boolean): number {
-      this.playerStone = maximizingPlayer ? 'O' : 'X'; //O
-      // this.playerStone ='O';
+  evaluateRelativeScoreForComputer(board: string[][], isAI: boolean): number {
+    // Calculate the score for the computer (black) and human (white)
+    let computerScore = this.evaluate(board, isAI);
+    let humanScore = this.evaluate(board, !isAI);
+  
+    // If humanScore is 0, set it to 1 to avoid division by zero
+    if (humanScore === 0) {
+      humanScore = 1.0;
+    }
+  
+    // Calculate the relative score of the computer (black) against the human (white)
+    const relativeScore = computerScore / humanScore;
+  
+    return relativeScore;
+  }
+  
 
-      const winScore = this.WIN_SCORE;
-      const loseScore = -this.WIN_SCORE;
-  
-      // Check for a winning state for 'O'
-      if (this.check.checkWinningState(board, 'O')) {
-        return winScore;
-      }
-  
-      // Check for a winning state for 'X'
-      if (this.check.checkWinningState(board, 'X')) {
-        return loseScore;
-      }
+  evaluate(board: string[][], maximizingPlayer: boolean): number {
+      this.playerStone = maximizingPlayer ? 'O' : 'X';
 
       let totalScore = 0;
-      // for (let i = 0; i < board.length; i++) {
-      //   for (let j = 0; j < board[i].length; j++) {
-      //     totalScore+=this.evaluateHorizontal(board, this.playerStone) +
-      //     this.evaluateVertical(board, this.playerStone) +
-      //     this.evaluateDiagonal(board, this.playerStone);
-    
-      //   }
-      // }
-
      
       totalScore=this.evaluateHorizontal(board, this.playerStone) +
       this.evaluateVertical(board, this.playerStone) +
@@ -103,12 +97,10 @@ export class EvaluationService {
   }
 
   private evaluateDirections(board: string[][], i: number, j: number, playerStone: string, evals: number[]): void {
-    // Check if the selected player has a stone in the current cell
     if (board[i][j] === playerStone) {
-      // Increment consecutive stones count
       evals[0]++;
     }
-    // Check if cell is empty
+ 
     else if (board[i][j] === '') {
       // Check if there were any consecutive stones before this empty cell
       if (evals[0] > 0) {
@@ -120,12 +112,9 @@ export class EvaluationService {
         evals[0] = 0;
         // Current cell is empty, next consecutive set will have at most 1 blocked side.
       }
-      // No consecutive stones.
-      // Current cell is empty, next consecutive set will have at most 1 blocked side.
+      
       evals[1] = 1;
     }
-    // Cell is occupied by the opponent
-    // Check if there were any consecutive stones before this empty cell
     else if (evals[0] > 0) {
       // Get consecutive set score
       evals[2] += this.getConsecutiveSetScore(evals[0], evals[1], playerStone);
@@ -159,6 +148,7 @@ export class EvaluationService {
     if (blocks === 2 && count < 5) {
       return 0;
     }
+    // console.log("count: "+ count);
 
     if(count>this.max_count)
     this.max_count=count;
@@ -166,10 +156,6 @@ export class EvaluationService {
     if (playerStone !== 'O') {
       winGuarantee = -winGuarantee;
     }
-
-    // console.log("count: "+count);
-    // console.log("block: "+blocks);
-    // console.log("player: "+playerStone);
 
     switch (count) {
       case 5: return winGuarantee;
@@ -183,202 +169,6 @@ export class EvaluationService {
 
 
 
-//Ungabunga
-  // evaluate(board: string[][], maximizingPlayer: boolean): number {
-  //   const currentPlayer = maximizingPlayer ? 'O' : 'X';
-  //   const opponent = maximizingPlayer ? 'X' : 'O';
   
-  //   // Define the score values for different game states
-  //   const winScore = 10000;
-  //   const loseScore = -10000;
-  //   const tieScore = 0;
-  //   const blockingScore = 100;
-  
-  //   // Check for a winning state for the current player
-  //   if (this.check.checkWinningState(board, currentPlayer)) {
-  //     return winScore;
-  //   }
-  
-  //   // Check for a winning state for the opponent
-  //   if (this.check.checkWinningState(board, opponent)) {
-  //     return loseScore;
-  //   }
-  
-  //   // Check for a tie (board full and no winner)
-  //   if (this.check.isBoardFull(board)) {
-  //     return tieScore;
-  //   }
-  
-  //   // Calculate a basic score based on the number of blocking moves
-  //   const blockingMoves = this.countBlockingMoves(board, currentPlayer);
-  //   const score = blockingMoves * blockingScore;
-  
-  //   return score;
-  // }
-
-  // countBlockingMoves(board: string[][], currentPlayer: string): number {
-  //   let blockingMoves = 0;
-  
-  //   // Iterate through the board and check each empty cell
-  //   for (let i = 0; i < board.length; i++) {
-  //     for (let j = 0; j < board[i].length; j++) {
-  //       if (board[i][j] === '') {
-  //         // Temporarily place the current player's stone in the empty cell
-  //         board[i][j] = currentPlayer;
-  
-  //         // Check if this move blocks the opponent from winning
-  //         if (this.check.checkWinningState(board, this.getOpponent(currentPlayer))) {
-  //           blockingMoves++;
-  //         }
-  
-  //         // Reset the cell to empty for the next iteration
-  //         board[i][j] = '';
-  //       }
-  //     }
-  //   }
-  
-  //   return blockingMoves;
-  // }
-  
-  // getOpponent(player: string): string {
-  //   return player === 'O' ? 'X' : 'O';
-  // }
-  
-
-
-
-  //**Sampad logic***
-  private WINNING_PLY: number = 5;
-  // private WINNER_SCORE: number = 50000;
-  // private ROLE: string = 'O'; // Default role is 'O'
-
-  // // Function to set the player role ('X' or 'O')
-  // setPlayerRole(role: string): void {
-  //   this.ROLE = role;
-  // }
-
-  // evaluate(board: string[][], maximizingPlayer: boolean): number {
-  //   this.ROLE = maximizingPlayer ? 'O' : 'X';
-
-  //   return this.findUtilityValue(board);
-  // }
-
-
-  // // Function to find the utility value of the current state
-  // findUtilityValue(currentState: string[][]): number {
-  //   let utilityScore = 0;
-
-  //   for (let i = 0; i < currentState.length; i++) {
-  //     for (let j = 0; j < currentState[i].length; j++) {
-  //       utilityScore +=
-  //         this.checkLeftSide(currentState, i, j) +
-  //         this.checkRightSide(currentState, i, j) +
-  //         this.checkUpSide(currentState, i, j) +
-  //         this.checkDownSide(currentState, i, j) +
-  //         this.checkLeftDiagonal(currentState, i, j) +
-  //         this.checkRightDiagonal(currentState, i, j);
-  //     }
-  //   }
-
-  //   return utilityScore;
-  // }
-
-  // // Function to check consecutive stones on the left side
-  // private checkLeftSide(currentState: string[][], a: number, b: number): number {
-  //   let counter = 0;
-
-  //   for (let i = a; i >= 0; i--) {
-  //     if (currentState[i][b] === this.ROLE) {
-  //       counter++;
-  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
-  //     } else {
-  //       return counter * counter * 5;
-  //     }
-  //   }
-
-  //   return counter;
-  // }
-
-  // // Function to check consecutive stones on the right side
-  // private checkRightSide(currentState: string[][], a: number, b: number): number {
-  //   let counter = 0;
-
-  //   for (let i = a; i < currentState.length; i++) {
-  //     if (currentState[i][b] === this.ROLE) {
-  //       counter++;
-  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
-  //     } else {
-  //       return counter * counter * 5;
-  //     }
-  //   }
-
-  //   return counter;
-  // }
-
-  // // Function to check consecutive stones on the up side
-  // private checkUpSide(currentState: string[][], a: number, b: number): number {
-  //   let counter = 0;
-
-  //   for (let j = b; j >= 0; j--) {
-  //     if (currentState[a][j] === this.ROLE) {
-  //       counter++;
-  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
-  //     } else {
-  //       return counter * counter * 5;
-  //     }
-  //   }
-
-  //   return counter;
-  // }
-
-  // // Function to check consecutive stones on the down side
-  // private checkDownSide(currentState: string[][], a: number, b: number): number {
-  //   let counter = 0;
-
-  //   for (let j = b; j < currentState.length; j++) {
-  //     if (currentState[a][j] === this.ROLE) {
-  //       counter++;
-  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
-  //     } else {
-  //       return counter * counter * 5;
-  //     }
-  //   }
-
-  //   return counter;
-  // }
-
-  // // Function to check consecutive stones on the left diagonal
-  // private checkLeftDiagonal(currentState: string[][], a: number, b: number): number {
-  //   let counter = 0;
-
-  //   for (let i = a, j = b; i < currentState.length && j < currentState.length; i++, j++) {
-  //     if (currentState[i][j] === this.ROLE) {
-  //       counter++;
-  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
-  //     } else {
-  //       return counter * counter * 5;
-  //     }
-  //   }
-
-  //   return counter;
-  // }
-
-  // // Function to check consecutive stones on the right diagonal
-  // private checkRightDiagonal(currentState: string[][], a: number, b: number): number {
-  //   let counter = 0;
-
-  //   for (let i = a, j = b; i >= 0 && j >= 0; i--, j--) {
-  //     if (currentState[i][j] === this.ROLE) {
-  //       counter++;
-  //       if (counter === this.WINNING_PLY) return this.WINNER_SCORE;
-  //     } else {
-  //       return counter * counter * 5;
-  //     }
-  //   }
-
-  //   return counter;
-  // }
-  
- 
 
 }
