@@ -10,7 +10,7 @@ export class EvaluationService {
   playerStone: string = '';
   max_count: number=0;
 
-  constructor( private check: CheckBoardService) {
+  constructor() {
   }
 
   evaluateRelativeScoreForComputer(board: string[][], isAI: boolean): number {
@@ -148,6 +148,7 @@ export class EvaluationService {
     if (blocks === 2 && count < 5) {
       return 0;
     }
+    console.log("count: "+ count);
 
     if(count>this.max_count)
     this.max_count=count;
@@ -155,10 +156,6 @@ export class EvaluationService {
     if (playerStone !== 'O') {
       winGuarantee = -winGuarantee;
     }
-
-    // console.log("count: "+count);
-    // console.log("block: "+blocks);
-    // console.log("player: "+playerStone);
 
     switch (count) {
       case 5: return winGuarantee;
