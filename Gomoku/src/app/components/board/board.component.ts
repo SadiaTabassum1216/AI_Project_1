@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CheckBoardService } from 'src/app/services/check-board.service';
 import { EvaluationService } from 'src/app/services/evaluation.service';
 import { MinimaxService } from 'src/app/services/minimax.service';
 @Component({
@@ -13,7 +14,8 @@ export class BoardComponent {
 
   //X means human. O means computer.
 
-  constructor(private minimaxService: MinimaxService, private evaluation: EvaluationService) {
+  constructor(private minimaxService: MinimaxService, private evaluation: EvaluationService,
+    private check: CheckBoardService) {
     this.initializeBoard();
   }
 
@@ -35,7 +37,7 @@ export class BoardComponent {
 
       this.board[row][column] = this.currentPlayer;
 
-      if (this.minimaxService.checkWinningState(this.board, this.currentPlayer)) {
+      if (this.check.checkWinningState(this.board, this.currentPlayer)) {
         setTimeout(() => {
           if (this.currentPlayer === 'X') {
             alert('Human wins!');

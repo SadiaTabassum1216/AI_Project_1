@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MinimaxService } from './minimax.service';
+import { CheckBoardService } from './check-board.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,20 +10,20 @@ export class EvaluationService {
   private WIN_SCORE: number = 100000000;
   playerStone: string = '';
 
-  constructor() {
+  constructor( private check: CheckBoardService) {
   }
 
   evaluate(board: string[][], maximizingPlayer: boolean): number {
-    if (maximizingPlayer)
-      this.playerStone = 'O';
-    else
-      this.playerStone = 'X';
+      this.playerStone = maximizingPlayer ? 'O' : 'X';
 
-    return (
-      this.evaluateHorizontal(board, this.playerStone) +
+      let totalScore = 0;
+
+      totalScore=this.evaluateHorizontal(board, this.playerStone) +
       this.evaluateVertical(board, this.playerStone) +
-      this.evaluateDiagonal(board, this.playerStone)
-    );
+      this.evaluateDiagonal(board, this.playerStone);
+
+    return totalScore;
+      
   }
 
   private evaluateHorizontal(board: string[][], playerStone: string): number {
@@ -138,93 +140,80 @@ export class EvaluationService {
     // console.log("player: "+playerStone);
 
     switch (count) {
-      case 5: {
-        console.log('5');
-        return winGuarantee;
-      }
-      case 4: {
-        if (playerStone === 'X') {
-          console.log('4.1');
-          return winGuarantee;
-        } else {
-          if (blocks === 0) {
-            console.log('4.2');
-            return winGuarantee / 4;
-          }
-          else {
-            console.log('4.3');
-            return 200;
-          }
-        }
-      }
-      case 3: {
-        if (blocks === 0) {
-          if (playerStone === 'O') {
-             console.log('3.1');
-            return 50000;
-          }
-          else {
-            return 200;
-          }
-        } else {
-          if (playerStone === 'O') {
-            // console.log('3.2');
-            return 10;
-          } else {
-            // console.log('3.3');
-            return 5;
-          }
-        }
-      }
-      case 2: {
-        if (blocks === 0) {
-          if (playerStone === 'O') {
-            // console.log('2.1');
-            return 7;
-          } else {
-            // console.log('2.2');
-            return 5;
-          }
-        } else {
-          // console.log('2.3');
-          return 3;
-        }
-      }
-      case 1: {
-        // console.log('1');
-        return 1;
-      }
+      case 5: return winGuarantee;
+      case 4: return playerStone === 'X' ? winGuarantee : (blocks === 0 ? winGuarantee / 4 : 200);
+      case 3: return blocks === 0 ? (playerStone === 'O' ? 50000 : 200) : (playerStone === 'O' ? 10 : 5);
+      case 2: return blocks === 0 ? (playerStone === 'O' ? 7 : 5) : 3;
+      case 1: return 1;
+      default: return winGuarantee * 2;
     }
 
-    return winGuarantee * 2;
+   
   }
 
 
 
-
-  // evaluate(board: string[][]): number {
+//Ungabunga
+  // evaluate(board: string[][], maximizingPlayer: boolean): number {
+  //   const currentPlayer = maximizingPlayer ? 'O' : 'X';
+  //   const opponent = maximizingPlayer ? 'X' : 'O';
+  
   //   // Define the score values for different game states
   //   const winScore = 10000;
   //   const loseScore = -10000;
   //   const tieScore = 0;
   //   const blockingScore = 100;
-
-  //   // Check for a winning state for 'O'
-  //   if (this.checkWinningState(board, 'O')) {
+  
+  //   // Check for a winning state for the current player
+  //   if (this.check.checkWinningState(board, currentPlayer)) {
   //     return winScore;
   //   }
-
-  //   // Check for a winning state for 'X'
-  //   if (this.checkWinningState(board, 'X')) {
-
+  
+  //   // Check for a winning state for the opponent
+  //   if (this.check.checkWinningState(board, opponent)) {
   //     return loseScore;
   //   }
-
-  //   // If neither 'O' nor 'X' has won, return a tie score
-  //   return tieScore;
+  
+  //   // Check for a tie (board full and no winner)
+  //   if (this.check.isBoardFull(board)) {
+  //     return tieScore;
+  //   }
+  
+  //   // Calculate a basic score based on the number of blocking moves
+  //   const blockingMoves = this.countBlockingMoves(board, currentPlayer);
+  //   const score = blockingMoves * blockingScore;
+  
+  //   return score;
   // }
 
-
+  // countBlockingMoves(board: string[][], currentPlayer: string): number {
+  //   let blockingMoves = 0;
+  
+  //   // Iterate through the board and check each empty cell
+  //   for (let i = 0; i < board.length; i++) {
+  //     for (let j = 0; j < board[i].length; j++) {
+  //       if (board[i][j] === '') {
+  //         // Temporarily place the current player's stone in the empty cell
+  //         board[i][j] = currentPlayer;
+  
+  //         // Check if this move blocks the opponent from winning
+  //         if (this.check.checkWinningState(board, this.getOpponent(currentPlayer))) {
+  //           blockingMoves++;
+  //         }
+  
+  //         // Reset the cell to empty for the next iteration
+  //         board[i][j] = '';
+  //       }
+  //     }
+  //   }
+  
+  //   return blockingMoves;
+  // }
+  
+  // getOpponent(player: string): string {
+  //   return player === 'O' ? 'X' : 'O';
+  // }
+  
 
 
 
