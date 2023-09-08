@@ -148,7 +148,7 @@ export class EvaluationService {
     if (blocks === 2 && count < 5) {
       return 0;
     }
-    // console.log("count: "+ count);
+    console.log("count: "+ count);
 
     if(count>this.max_count)
     this.max_count=count;
