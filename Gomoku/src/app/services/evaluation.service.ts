@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-import { CheckBoardService } from './check-board.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EvaluationService {
 
-  private WIN_SCORE: number = 10000000;
-  playerStone: string = '';
-  max_count: number=0;
+  private WIN_SCORE: number = 10_000_000;
+  //playerStone: string = '';
+ // max_count: number=0;
 
   constructor() {
   }
 
-  evaluateRelativeScoreForComputer(board: string[][], isAI: boolean): number {
+  evaluateRelativeScoreForComputer(board: string[][], isHuman: boolean): number {
     // Calculate the score for the computer (black) and human (white)
-    let computerScore = this.evaluate(board,false, isAI);
-    let humanScore = this.evaluate(board, true, !isAI);
+    let computerScore = this.evaluate(board,false, isHuman);
+    let humanScore = this.evaluate(board, true, isHuman);
   
     // If humanScore is 0, set it to 1 to avoid division by zero
     if (humanScore === 0) {
@@ -49,7 +48,7 @@ export class EvaluationService {
     let evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
 
     for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board[i].length; j++) {
+      for (let j = 0; j < board[0].length; j++) {
       this.evaluateDirections(board, i, j, forHuman, maximizingPlayer, evaluations);
       }
     this.evaluateDirectionsAfterOnePass(evaluations,  forHuman, maximizingPlayer);

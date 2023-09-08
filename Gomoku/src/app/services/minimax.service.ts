@@ -11,7 +11,6 @@ export class MinimaxService {
 
   constructor(
     private evaluation: EvaluationService,
-    private evaluation_2: Evaluation2Service,
     private moves: MovesService,
     private check: CheckBoardService) { }
 
