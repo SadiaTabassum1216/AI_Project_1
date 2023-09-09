@@ -1,13 +1,4 @@
-/* .game-board {
-    display: grid;
-    grid-template-columns: repeat(10, 60px);
-    grid-template-rows: repeat(10, 60px); 
-    gap: 2px;
-    border: 2px solid #333;
-    padding: 10px;
-    justify-content: center;
-    border-radius: 5px;
-  } */
+
 
   .game-board {
     display: grid;
@@ -27,14 +18,7 @@
     height: 100vh;
   }
   
-/*   
-.x-cell {
-  background-color: rgb(201, 156, 59);
-}
 
-.o-cell {
-  background-color: rgb(201, 156, 59);
-} */
 
 img {
   width: 100%;
