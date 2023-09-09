@@ -28,7 +28,7 @@ export class MinimaxService {
         move[0] = bestMove[1]!;
         move[1] = bestMove[2]!;
     } else {
-      const minimaxResult: { score: number; move: [number, number] } = this.minimax(board, this.maxDepth, true, -1.0, this.WIN_SCORE);
+      const minimaxResult: { score: number; move: [number, number] } = this.minimaxSearchAB(board, this.maxDepth, true, -1.0, this.WIN_SCORE);
       if (minimaxResult.move === null) {
           return null;
       } else {
@@ -46,49 +46,126 @@ export class MinimaxService {
     // return bestMove.move;
   }
 
-  minimax(
+  private minimaxSearchAB(
     board: string[][],
     depth: number,
-    maximizingPlayer: boolean,
+    max: boolean,
     alpha: number,
     beta: number
   ): { score: number; move: [number, number] } {
-    const result = this.check.checkGameStatus(board);
+    if (depth === 0) {
+      return { score: this.evaluation.evaluateRelativeScoreForComputer(board, !max), move: [-1, -1] };
+    }
   
-    if (result !== null || depth <= 0) {
-      return {
-        score: this.evaluation.evaluateRelativeScoreForComputer(board, !maximizingPlayer),
-        move: [-1, -1],
+    const allPossibleMoves: number[][] =this.moves.generateMoves(board);
+
+    if (allPossibleMoves.length === 0) {
+      return { score: this.evaluation.evaluateRelativeScoreForComputer(board, !max), move: [-1, -1] };
+     
+    }
+  
+    let bestMove: { score: number; move: [number, number] } = {
+      score: max ? -1.0 : 10000000,
+      move: [-1, -1],
+    };
+    if (max) {
+    
+      for (const move of allPossibleMoves) {  
+        bestMove.score=-1;   
+        const tempMove = this.minimaxSearchAB( board,depth - 1, false, alpha, beta);
+  
+       
+        if (tempMove.score > alpha) {
+          alpha = tempMove.score;
+        }
+      
+        if (tempMove.score >= beta) {
+          return tempMove;
+        }
+        if (tempMove.score > bestMove.score) {
+          bestMove = {
+            score: tempMove.score,
+            move: [move[0], move[1]],
+          };
+        }
+      }
+    } else {
+     
+      bestMove = {
+        score: 10000000,
+        move: [allPossibleMoves[0][0], allPossibleMoves[0][1]],
       };
-    }
   
-    let bestMove: [number, number] = [-1, -1];
-    let bestScore: number = maximizingPlayer ? -Infinity : Infinity;
+      // Iterate for all possible moves that can be made.
+      for (const move of allPossibleMoves) {
+       
+        const tempMove = this.minimaxSearchAB( board,depth - 1, true, alpha, beta);
   
-    const validMoves: [number, number][] = this.moves.generateMoves(board);
+      
+        if (tempMove.score < beta) {
+          beta = tempMove.score;
+        }
+        
+        if (tempMove.score <= alpha) {
+          return tempMove;
+        }
   
-    for (const [row, col] of validMoves) {
-      board[row][col] = maximizingPlayer ? 'O' : 'X'; // Make a move
-      const score = this.minimax(board, depth - 1, false, alpha, beta).score;
-      board[row][col] = ''; // Undo the move
-  
-      if (maximizingPlayer && score > bestScore) {
-        bestScore = score;
-        bestMove = [row, col];
-        alpha = Math.max(alpha, bestScore);
-      } else if (!maximizingPlayer && score < bestScore) {
-        bestScore = score;
-        bestMove = [row, col];
-        beta = Math.min(beta, bestScore);
-      }
-  
-      if (alpha >= beta) {
-        break; // Prune the branch
+        if (tempMove.score < bestMove.score) {
+          bestMove = {
+            score: tempMove.score,
+            move: [move[0], move[1]],
+          };
+        }
       }
     }
   
-    return { score: bestScore, move: bestMove };
+    return bestMove;
   }
+  
+
+  // minimax(
+  //   board: string[][],
+  //   depth: number,
+  //   maximizingPlayer: boolean,
+  //   alpha: number,
+  //   beta: number
+  // ): { score: number; move: [number, number] } {
+  //   const result = this.check.checkGameStatus(board);
+  
+  //   if (result !== null || depth <= 0) {
+  //     return {
+  //       score: this.evaluation.evaluateRelativeScoreForComputer(board, !maximizingPlayer),
+  //       move: [-1, -1],
+  //     };
+  //   }
+  
+  //   let bestMove: [number, number] = [-1, -1];
+  //   let bestScore: number = maximizingPlayer ? -Infinity : Infinity;
+  
+  //   const validMoves: [number, number][] = this.moves.generateMoves(board);
+  
+  //   for (const [row, col] of validMoves) {
+  //     board[row][col] = maximizingPlayer ? 'O' : 'X'; // Make a move
+  //     const score = this.minimax(board, depth - 1, false, alpha, beta).score;
+  //     board[row][col] = ''; // Undo the move
+  
+  //     if (maximizingPlayer && score > bestScore) {
+  //       bestScore = score;
+  //       bestMove = [row, col];
+  //       alpha = Math.max(alpha, bestScore);
+  //     } else if (!maximizingPlayer && score < bestScore) {
+  //       bestScore = score;
+  //       bestMove = [row, col];
+  //       beta = Math.min(beta, bestScore);
+  //     }
+  
+  //     if (alpha >= beta) {
+  //       break; // Prune the branch
+  //     }
+  //   }
+  
+  //   return { score: bestScore, move: bestMove };
+  // }
   
 
 
