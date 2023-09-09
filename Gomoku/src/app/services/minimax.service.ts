@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { EvaluationService } from './evaluation.service';
 import { MovesService } from './moves.service';
 import { CheckBoardService } from './check-board.service';
-import { Evaluation2Service } from './evaluation-2.service';
+import { Evaluation2Service } from './evaluation_new.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,6 @@ export class MinimaxService {
 
   constructor(
     private evaluation: EvaluationService,
-    private evaluation_2: Evaluation2Service,
     private moves: MovesService,
     private check: CheckBoardService) { }
 

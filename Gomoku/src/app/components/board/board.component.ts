@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CheckBoardService } from 'src/app/services/check-board.service';
+import { Minimax2Service } from 'src/app/services/minimax_new.service';
 import { MinimaxJavaService } from 'src/app/services/minimax-java.service';
 import { MinimaxService } from 'src/app/services/minimax.service';
 @Component({
@@ -15,8 +16,9 @@ export class BoardComponent {
   //X means human. O means computer.
 
   constructor(
-     private minimaxService: MinimaxService,
+    private minimaxService: MinimaxService,
     private minimax_java: MinimaxJavaService,
+    private minimaxService_new: Minimax2Service,
     private check: CheckBoardService) {
     this.initializeBoard();
   }
@@ -58,13 +60,14 @@ export class BoardComponent {
           this.newGame();
         }, 200);
       }
-       else {
+      else {
         // Switch turn
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
         if (this.currentPlayer === 'O') {
-          // const computerMove = this.minimax_java.calculateComputerMove(this.board);
-          const computerMove = this.minimaxService.calculateComputerMove(this.board);
+          // const computerMove = this.minimax_java.calculateComputerMove(this.board); // to run java logic
+          // const computerMove = this.minimaxService.calculateComputerMove(this.board);  // to run wrking logic
+          const computerMove = this.minimaxService_new.calculateComputerMove(this.board); //under construction
           if (computerMove) {
             const [computerRow, computerColumn] = computerMove;
             // console.log("Score: "+computerMove);
@@ -73,21 +76,21 @@ export class BoardComponent {
         }
 
         //print current state
-         console.log('Row: '+row+' Column: '+column)
-         console.log('Print board: ');
-         for (let c = 0; c < this.board[0].length; c++) {
-           let rowStr = '';
-           for (let r = 0; r < this.board.length; r++) {
-             // Check if the current cell is blank (empty)
-             if (this.board[r][c] === '') {
-               rowStr += '_ ';
-             } else {
-               rowStr += this.board[r][c] + ' ';
-             }
-           }
-           console.log(rowStr);
-         }
-         
+        console.log('Row: ' + row + ' Column: ' + column)
+        console.log('Print board: ');
+        for (let c = 0; c < this.board[0].length; c++) {
+          let rowStr = '';
+          for (let r = 0; r < this.board.length; r++) {
+            // Check if the current cell is blank (empty)
+            if (this.board[r][c] === '') {
+              rowStr += '_ ';
+            } else {
+              rowStr += this.board[r][c] + ' ';
+            }
+          }
+          console.log(rowStr);
+        }
+
       }
     }
   }
