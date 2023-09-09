@@ -14,7 +14,7 @@ export class MinimaxJavaService {
   maxDepth: number = 3;
   private WIN_SCORE: number = 10000000;
 
-  calculateComputerMove(board: string[][]): [number, number] | null {
+  calculateComputerMove(board: number[][]): [number, number] | null {
 
     const move: [number, number] = [-1, -1];
 
@@ -38,7 +38,7 @@ export class MinimaxJavaService {
   }
 
   private minimaxSearchAB(
-    board: string[][],
+    board: number[][],
     depth: number,
     max: boolean,
     alpha: number,
@@ -120,7 +120,7 @@ export class MinimaxJavaService {
     return bestMove;
   }
 
-  searchWinningMove(board: string[][]): { score: number; move: [number, number] } | null {
+  searchWinningMove(board: number[][]): { score: number; move: [number, number] } | null {
     const WIN_SCORE = 100000; // Define your WIN_SCORE constant here
     const allPossibleMoves: [number, number][] = this.moves.generateMoves(board);
 

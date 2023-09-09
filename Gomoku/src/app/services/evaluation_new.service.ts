@@ -8,13 +8,13 @@ export class Evaluation2Service {
 
   constructor(private moves: MovesService) { }
 
-  playerStone: string = '';
-  opponent: string = '';;
+  playerStone: number = 0;
+  opponent: number = 0;
 
 
-  evaluate(board: string[][], maximizingPlayer: boolean, move: [number, number]): number {
-    this.playerStone = maximizingPlayer ? 'O' : 'X';
-    this.opponent = maximizingPlayer ? 'X' : 'O';
+  evaluate(board: number[][], maximizingPlayer: boolean, move: [number, number]): number {
+    this.playerStone = maximizingPlayer ? 1 : 2;
+    this.opponent = maximizingPlayer ? 2 : 1;
 
     const [moveRow, moveCol] = move;
 
@@ -37,7 +37,7 @@ export class Evaluation2Service {
     return playerScore - opponentScore;
   }
 
-  calculateHorizontalCount(board: string[][], row: number, col: number, stone: string): number {
+  calculateHorizontalCount(board: number[][], row: number, col: number, stone: number): number {
     let consecutiveCount = 0;
     let max_count = 0;
 
@@ -54,7 +54,7 @@ export class Evaluation2Service {
           break
 
       }
-      else if (newCol >= 0 && newCol < board[0].length && (board[row][newCol] === '')) {
+      else if (newCol >= 0 && newCol < board[0].length && (board[row][newCol] === 0)) {
         if (this.countSpaces(consecutiveString.trim()) < 1) {
           consecutiveCount++;
           consecutiveString += ' ';
@@ -83,7 +83,7 @@ export class Evaluation2Service {
   }
 
 
-  calculateVerticalCount(board: string[][], row: number, col: number, stone: string): number {
+  calculateVerticalCount(board: number[][], row: number, col: number, stone: number): number {
     let consecutiveCount = 0;
     let max_count = 0;
 
@@ -97,7 +97,7 @@ export class Evaluation2Service {
         if (consecutiveCount > max_count)
           max_count = consecutiveCount;
       }
-      else if (newRow >= 0 && newRow < board.length && (board[newRow][col] === '')) {
+      else if (newRow >= 0 && newRow < board.length && (board[newRow][col] === 0)) {
         if (this.countSpaces(consecutiveString.trim()) < 1) {
           consecutiveCount++;
           consecutiveString += ' ';
@@ -126,7 +126,7 @@ export class Evaluation2Service {
     return Math.pow(10, max_count);
   }
 
-  calculateDiagonal1Count(board: string[][], row: number, col: number, stone: string): number {
+  calculateDiagonal1Count(board: number[][], row: number, col: number, stone: number): number {
     let consecutiveCount = 0;
     let max_count = 0;
 
@@ -149,7 +149,7 @@ export class Evaluation2Service {
       }
       else if (newRow >= 0 && newRow < board.length &&
         newCol >= 0 && newCol < board[0].length &&
-        (board[newRow][newCol] === '')) {
+        (board[newRow][newCol] === 0)) {
           if (this.countSpaces(consecutiveString.trim()) < 1) {
             consecutiveCount++;
             consecutiveString += ' ';
@@ -179,7 +179,7 @@ export class Evaluation2Service {
     return Math.pow(10, max_count);
   }
 
-  calculateDiagonal2Count(board: string[][], row: number, col: number, stone: string): number {
+  calculateDiagonal2Count(board: number[][], row: number, col: number, stone: number): number {
     let consecutiveCount = 0;
     let max_count = 0;
 
@@ -202,7 +202,7 @@ export class Evaluation2Service {
       }
       else if (newRow >= 0 && newRow < board.length &&
         newCol >= 0 && newCol < board[0].length &&
-        (board[newRow][newCol] === '')) {
+        (board[newRow][newCol] === 0)) {
           if (this.countSpaces(consecutiveString.trim()) < 1) {
             consecutiveCount++;
             consecutiveString += ' ';

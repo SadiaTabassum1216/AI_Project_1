@@ -12,7 +12,7 @@ export class EvaluationService {
   constructor() {
   }
 
-  evaluateRelativeScoreForComputer(board: string[][], isHuman: boolean): number {
+  evaluateRelativeScoreForComputer(board: number[][], isHuman: boolean): number {
     // Calculate the score for the computer (black) and human (white)
     let computerScore = this.evaluate(board,false, isHuman);
     let humanScore = this.evaluate(board, true, isHuman);
@@ -31,7 +31,7 @@ export class EvaluationService {
   }
   
 
-  evaluate(board: string[][], forHuman: boolean, maximizingPlayer: boolean): number {
+  evaluate(board: number[][], forHuman: boolean, maximizingPlayer: boolean): number {
       // this.playerStone = maximizingPlayer ? 'O' : 'X';
 
       let totalScore = 0;
@@ -46,7 +46,7 @@ export class EvaluationService {
       
   }
 
-  private evaluateHorizontal(board: string[][], forHuman: boolean, maximizingPlayer: boolean): number {
+  private evaluateHorizontal(board: number[][], forHuman: boolean, maximizingPlayer: boolean): number {
     let evaluations = [0, 2, 0]; // [0] -> consecutive count, [1] -> block count, [2] -> score
 
     for (let i = 0; i < board.length; i++) {
@@ -55,36 +55,15 @@ export class EvaluationService {
         }
         evaluations=this.evaluateDirectionsAfterOnePass(evaluations, forHuman, maximizingPlayer);
 
-        // Print the board with scores after each row
-        this.printBoardWithScores(board, evaluations);
+       
     }
 
     return evaluations[2];
 }
 
-private printBoardWithScores(board: string[][], evaluations: number[]): void {
-    const boardWithScores: string[][] = [];
-
-    // Create a copy of the original board
-    for (let i = 0; i < board.length; i++) {
-        boardWithScores[i] = [...board[i]];
-    }
-
-    // Add score values to the copied board
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[0].length; j++) {
-            boardWithScores[i][j] += `${evaluations[0]}`;
-        }
-    }
-
-    // Print the board with scores
-    for (let i = 0; i < boardWithScores.length; i++) {
-        console.log(boardWithScores[i].join(' '));
-    }
-}
 
 
-  private evaluateVertical(board: string[][],forHuman: boolean, maximizingPlayer: boolean): number {
+  private evaluateVertical(board: number[][],forHuman: boolean, maximizingPlayer: boolean): number {
     let evaluations = [0, 2, 0]; 
 
     for (let j = 0; j < board[0].length; j++) {
@@ -97,7 +76,7 @@ private printBoardWithScores(board: string[][], evaluations: number[]): void {
     return evaluations[2];
   }
 
-  private evaluateDiagonal(board: string[][], forHuman: boolean, maximizingPlayer: boolean): number {
+  private evaluateDiagonal(board: number[][], forHuman: boolean, maximizingPlayer: boolean): number {
     let evaluations = [0, 2, 0];
     // From bottom-left to top-right diagonally
     for (let k = 0; k <= 2 * (board.length - 1); k++) {
@@ -122,14 +101,14 @@ private printBoardWithScores(board: string[][], evaluations: number[]): void {
     return evaluations[2];
   }
 
-  private evaluateDirections(board: string[][], i: number, j: number, isAI: boolean, AITurn: boolean, evals: number[]): number[] {
+  private evaluateDirections(board: number[][], i: number, j: number, isAI: boolean, AITurn: boolean, evals: number[]): number[] {
     
     
-    if (board[i][j] === (isAI? 'X': 'O')) {
+    if (board[i][j] === (isAI? 2: 1)) {
       evals[0]++;
     }
  
-    else if (board[i][j] === '') {
+    else if (board[i][j] === 0) {
       // Check if there were any consecutive stones before this empty cell
       if (evals[0] > 0) {
         // Consecutive set is not blocked by the opponent, decrement block count
