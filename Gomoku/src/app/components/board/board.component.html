@@ -7,7 +7,7 @@
         *ngFor="let cell of r; let columnIndex = index"
         class="cell"
         [ngClass]="{ 'x-cell': cell === 'X', 'o-cell': cell === 'O' }"
-        (click)="makeMove(rowIndex, columnIndex)"
+        (click)="makeMove(rowIndex, columnIndex)"      
       >
         <img *ngIf="cell === 'X'" src="assets/white-pawn.png" alt="White Pawn" />
         <img *ngIf="cell === 'O'" src="assets/black-pawn.png" alt="Black Pawn" />
