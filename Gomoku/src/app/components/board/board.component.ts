@@ -37,9 +37,6 @@ export class BoardComponent {
   makeMove(row: number, column: number): void {
     if (this.board[row][column] === '') {
 
-      // console.log("before: ")
-      // console.log('Row: '+row+' Column: '+column)
-
       this.board[row][column] = this.currentPlayer;
 
       // console.log("AI: "+this.evaluation.evaluate(this.board, false, true));
