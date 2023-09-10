@@ -25,6 +25,7 @@ export class Evaluation2Service {
     //full board evaluate hobe
     //ekta perameter hoilo maximizing player true ki na. 
     //second arektay true/false dibo kar jonno calculat kori
+    //Keeping this file just in case
 
     const horizontalPlayerScore = this.calculateHorizontalCount(board, moveRow, moveCol, this.playerStone);
     const verticalPlayerScore = this.calculateVerticalCount(board, moveRow, moveCol, this.playerStone);
