@@ -1,4 +1,7 @@
 /* Custom CSS for styling */
+.modal-content{
+  padding: 20px;
+}
 .welcome-page {
     background-color: rgba(173, 216, 230, 0.7); /* Sky blue with transparency */
     padding: 20px;

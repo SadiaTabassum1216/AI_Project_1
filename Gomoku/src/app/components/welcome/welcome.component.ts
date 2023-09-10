@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MinimaxService } from 'src/app/services/minimax.service';
+
 
 @Component({
   selector: 'app-welcome',
@@ -6,17 +9,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent {
-  selectedDifficulty: string = ''; // Variable to store the selected difficulty
+  selectedDifficulty: number=3; // Variable to store the selected difficulty
 
+  constructor(public dialogRef: MatDialogRef<WelcomeComponent>,
+    private minimax:MinimaxService) {}
+
+ 
   startGame() {
-    if (this.selectedDifficulty) {
-      // The user has selected a difficulty, you can start the game here
-      console.log(`Starting the game with difficulty: ${this.selectedDifficulty}`);
-      
-      // You can add your game logic here, e.g., navigate to the game board component
-    } else {
-      // Display an error message or handle the case where the user hasn't selected a difficulty
-      console.error('Please select a difficulty before starting the game.');
-    }
+    this.minimax.maxDepth=this.selectedDifficulty;
+    console.log(this.selectedDifficulty);
+    this.dialogRef.close(this.selectedDifficulty);
   }
 }

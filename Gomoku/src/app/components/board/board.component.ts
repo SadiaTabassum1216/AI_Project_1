@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageModalComponent } from '../message-modal/message-modal.component';
 import { CheckBoardService } from 'src/app/services/check-board.service';
 import { MinimaxService } from 'src/app/services/minimax.service';
+import { WelcomeComponent } from '../welcome/welcome.component';
 
 @Component({
   selector: 'app-board',
@@ -13,17 +14,20 @@ export class BoardComponent {
   boardSize = 10;
   board: number[][] = []; // Change the type to number[][]
   currentPlayer: number = 2; // 2 for human, 1 for AI
+  
 
   constructor(
     private minimaxService: MinimaxService,
     private check: CheckBoardService,
     private dialog: MatDialog
   ) {
-    this.initializeBoard();
+    this.newGame();
+
   }
 
   newGame(): void {
     this.initializeBoard();
+    this.showWelcomeModal();
     this.currentPlayer = 2; // Set the initial player to human (2)
   }
   
@@ -42,12 +46,18 @@ export class BoardComponent {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      // Reload the page when the modal is closed
       window.location.reload();
     });
   }
 
+  showWelcomeModal(){
+    this.dialog.open(WelcomeComponent, {
+      width: '500px',
+    });
+  }
+
   makeMove(row: number, column: number): void {
+    console.log(this.minimaxService.maxDepth);
     if (this.board[row][column] === 0) {
       this.board[row][column] = this.currentPlayer;
 
