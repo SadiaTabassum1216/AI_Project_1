@@ -1,5 +1,6 @@
-
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageModalComponent } from '../message-modal/message-modal.component';
 import { CheckBoardService } from 'src/app/services/check-board.service';
 import { MinimaxService } from 'src/app/services/minimax.service';
 
@@ -14,8 +15,9 @@ export class BoardComponent {
   currentPlayer: number = 2; // 2 for human, 1 for AI
 
   constructor(
-     private minimaxService: MinimaxService,
-    private check: CheckBoardService
+    private minimaxService: MinimaxService,
+    private check: CheckBoardService,
+    private dialog: MatDialog
   ) {
     this.initializeBoard();
   }
@@ -31,36 +33,48 @@ export class BoardComponent {
     }
   }
 
+  // Add the showMessage method to display messages in a modal
+  // Show the custom modal
+  showCustomMessage(message: string): void {
+    const dialogRef = this.dialog.open(MessageModalComponent, {
+      width: '300px',
+      data: { message }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Reload the page when the modal is closed
+      window.location.reload();
+    });
+  }
+
   makeMove(row: number, column: number): void {
     if (this.board[row][column] === 0) {
-      this.board[row][column] = this.currentPlayer; // Set the current player's number on the board
+      this.board[row][column] = this.currentPlayer;
 
       if (this.check.checkWinningState(this.board, this.currentPlayer === 2 ? 2 : 1)) {
         setTimeout(() => {
           if (this.currentPlayer === 2) {
-            alert('Human wins!');
+            this.showCustomMessage('Human wins!');
           } else {
-            alert('Computer wins!');
+            this.showCustomMessage('Computer wins!');
           }
-          this.newGame();
         }, 200);
       } else if (this.check.checkGameStatus(this.board) === 3) {
         setTimeout(() => {
-          alert("It's a tie!");
-          this.newGame();
+          this.showCustomMessage("It's a tie!");
         }, 200);
       } else {
-        // Switch turn
-        this.currentPlayer = this.currentPlayer === 2 ? 1 : 2; // Toggle between 2 (human) and 1 (AI)
+        this.currentPlayer = this.currentPlayer === 2 ? 1 : 2;
 
         if (this.currentPlayer === 1) {
-          const computerMove = this.minimaxService.calculateComputerMove(this.board); // to run java logic
+          const computerMove = this.minimaxService.calculateComputerMove(this.board);
           if (computerMove) {
             const [computerRow, computerColumn] = computerMove;
             this.makeMove(computerRow, computerColumn);
           }
         }
-
+   
+   
         // Print current state
         console.log('Row: ' + row + ' Column: ' + column);
         console.log('Print board: ');
