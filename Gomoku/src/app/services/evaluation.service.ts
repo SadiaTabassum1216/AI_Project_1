@@ -4,7 +4,7 @@ import { Cell_evaluation } from '../models/cell_eval.model';
 @Injectable({
   providedIn: 'root'
 })
-export class EvaluationJavaService {
+export class EvaluationService {
 
 
   private WIN_SCORE: number = 10_000_000;

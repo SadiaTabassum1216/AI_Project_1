@@ -1,0 +1,24 @@
+<div class="container-fluid full-page">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h1>Welcome to Gomoku</h1>
+        <p>Select the difficulty level:</p>
+  
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="difficulty" id="easy" value="easy" [(ngModel)]="selectedDifficulty">
+          <label class="form-check-label" for="easy">Easy</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="difficulty" id="medium" value="medium" [(ngModel)]="selectedDifficulty">
+          <label class="form-check-label" for="medium">Medium</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="difficulty" id="hard" value="hard" [(ngModel)]="selectedDifficulty">
+          <label class="form-check-label" for="hard">Hard</label>
+        </div>
+  
+        <button class="btn btn-primary mt-3 start-button" (click)="startGame()">Start Game</button>
+      </div>
+    </div>
+  </div>
+  

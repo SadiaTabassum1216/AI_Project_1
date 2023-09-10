@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EvaluationJavaService } from './evaluation-java.service';
+import { EvaluationService } from './evaluation.service';
 import { MovesService } from './moves.service';
 import { CheckBoardService } from './check-board.service';
 
@@ -9,7 +9,7 @@ import { CheckBoardService } from './check-board.service';
 export class MinimaxService {
 
   constructor(
-    private evaluation: EvaluationJavaService,
+    private evaluation: EvaluationService,
     private moves: MovesService,
     private check: CheckBoardService) { }
 
