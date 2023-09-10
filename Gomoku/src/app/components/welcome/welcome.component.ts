@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MinimaxService } from 'src/app/services/minimax.service';
 
 
@@ -9,14 +9,14 @@ import { MinimaxService } from 'src/app/services/minimax.service';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent {
-  selectedDifficulty: number=3; // Variable to store the selected difficulty
+  selectedDifficulty: number = 3;
 
   constructor(public dialogRef: MatDialogRef<WelcomeComponent>,
-    private minimax:MinimaxService) {}
+    private minimax: MinimaxService) { }
 
- 
+
   startGame() {
-    this.minimax.maxDepth=this.selectedDifficulty;
+    this.minimax.maxDepth = this.selectedDifficulty;
     console.log(this.selectedDifficulty);
     this.dialogRef.close(this.selectedDifficulty);
   }

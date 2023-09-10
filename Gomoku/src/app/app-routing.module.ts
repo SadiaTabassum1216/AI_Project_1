@@ -3,8 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BoardComponent } from './components/board/board.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 const routes: Routes = [
-  {path:'', component: BoardComponent},
-  {path:'welcome',component:WelcomeComponent}
+  {path:'', component: BoardComponent}
 ];
 
 @NgModule({

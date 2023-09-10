@@ -7,8 +7,6 @@ export class CheckBoardService {
 
   constructor() { }
 
-
-  
   checkGameStatus(board: number[][]): number | null {
     if (this.checkWinningState(board, 1)) {
       return 1;
@@ -29,8 +27,6 @@ export class CheckBoardService {
   boardSize = 10;
   allWinningPatterns: number[][][] = this.generateWinningPatterns(this.boardSize);
 
-
-  // Helper function to generate all possible horizontal, vertical, and diagonal winning patterns
   generateWinningPatterns(boardSize: number): number[][][] {
     const patterns: number[][][] = [];
 
@@ -82,7 +78,6 @@ export class CheckBoardService {
   }
 
 
-  // Helper function to check if a player has won
   checkWinningState(board: number[][], player: number): boolean {
     for (const pattern of this.allWinningPatterns) {
       if (this.checkPattern(board, pattern, player)) {
@@ -92,8 +87,6 @@ export class CheckBoardService {
     return false;
   }
 
-
-  // Helper function to check if a specific pattern is present on the board
   checkPattern(board: number[][], pattern: number[][], player: number): boolean {
     for (const [row, col] of pattern) {
       if (board[row][col] !== player) {

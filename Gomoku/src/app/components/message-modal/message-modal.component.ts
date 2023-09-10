@@ -8,7 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class MessageModalComponent {
   message: string;
- constructor(
+  constructor(
     public dialogRef: MatDialogRef<MessageModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { message: string }
   ) {
@@ -17,7 +17,6 @@ export class MessageModalComponent {
 
   closeModal(): void {
     this.dialogRef.close();
-    // Reload the page when the modal is closed
     window.location.reload();
   }
 }

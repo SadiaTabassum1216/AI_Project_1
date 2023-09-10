@@ -36,9 +36,9 @@ export class MinimaxService {
     const validMoves: [number, number][] = this.moves.generateMoves(board);
 
     for (const [row, col] of validMoves) {
-      board[row][col] = maximizingPlayer ? 1 : 2; // Make a move
+      board[row][col] = maximizingPlayer ? 1 : 2; //move
       const score = this.minimax(board, depth - 1, !maximizingPlayer, alpha, beta).score;
-      board[row][col] = 0; // Undo the move
+      board[row][col] = 0;
 
       if (maximizingPlayer && score > bestScore) {
         bestScore = score;

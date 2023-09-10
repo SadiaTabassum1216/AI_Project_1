@@ -12,9 +12,9 @@ import { WelcomeComponent } from '../welcome/welcome.component';
 })
 export class BoardComponent {
   boardSize = 10;
-  board: number[][] = []; // Change the type to number[][]
+  board: number[][] = [];
   currentPlayer: number = 2; // 2 for human, 1 for AI
-  
+
 
   constructor(
     private minimaxService: MinimaxService,
@@ -28,17 +28,15 @@ export class BoardComponent {
   newGame(): void {
     this.initializeBoard();
     this.showWelcomeModal();
-    this.currentPlayer = 2; // Set the initial player to human (2)
+    this.currentPlayer = 2; // human (2)
   }
-  
+
   initializeBoard(): void {
     for (let i = 0; i < this.boardSize; i++) {
-      this.board[i] = Array(this.boardSize).fill(0); // Fill the board with zeros (0) initially
+      this.board[i] = Array(this.boardSize).fill(0);
     }
   }
 
-  // Add the showMessage method to display messages in a modal
-  // Show the custom modal
   showCustomMessage(message: string): void {
     const dialogRef = this.dialog.open(MessageModalComponent, {
       width: '300px',
@@ -50,7 +48,7 @@ export class BoardComponent {
     });
   }
 
-  showWelcomeModal(){
+  showWelcomeModal() {
     this.dialog.open(WelcomeComponent, {
       width: '500px',
     });
@@ -83,8 +81,7 @@ export class BoardComponent {
             this.makeMove(computerRow, computerColumn);
           }
         }
-   
-   
+
         // Print current state
         console.log('Row: ' + row + ' Column: ' + column);
         console.log('Print board: ');
