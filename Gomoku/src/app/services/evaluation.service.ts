@@ -91,22 +91,22 @@ export class EvaluationService {
     return evaluation.score;
   }
 
-  private evaluateDirections(board: number[][], i: number, j: number, isAI: boolean, AITurn: boolean, evals: Cell_evaluation): Cell_evaluation {
-    if (board[i][j] === (isAI ? 2 : 1)) {
+  private evaluateDirections(board: number[][], i: number, j: number, isHuman: boolean, AITurn: boolean, evals: Cell_evaluation): Cell_evaluation {
+    if (board[i][j] === (isHuman ? 2 : 1)) {
       evals.consecutiveCount++;
     }
 
     else if (board[i][j] === 0) {
       if (evals.consecutiveCount > 0) {
         evals.blockCount--;
-        evals.score += this.getConsecutiveSetScore(evals.consecutiveCount, evals.blockCount, isAI === AITurn);
+        evals.score += this.getConsecutiveSetScore(evals.consecutiveCount, evals.blockCount, isHuman === AITurn);
         evals.consecutiveCount = 0;
       }
 
       evals.blockCount = 1;
     }
     else if (evals.consecutiveCount > 0) {
-      evals.score += this.getConsecutiveSetScore(evals.consecutiveCount, evals.blockCount, isAI === AITurn);
+      evals.score += this.getConsecutiveSetScore(evals.consecutiveCount, evals.blockCount, isHuman === AITurn);
       evals.consecutiveCount = 0;
       evals.blockCount = 2;
     } else {
